@@ -1,4 +1,4 @@
-package com.example.foody.data.database.entities
+package com.tms.an16.tasty.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

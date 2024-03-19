@@ -19,7 +19,7 @@ interface Api {
         @QueryMap searchQuery: Map<String, String>
     ): Response<FoodRecipe>
 
-    @GET("food/jokes/random")
+    @GET("food/trivia/random")
     suspend fun getFoodJoke(
         @Query("apiKey") apiKey: String
     ): Response<FoodJoke>

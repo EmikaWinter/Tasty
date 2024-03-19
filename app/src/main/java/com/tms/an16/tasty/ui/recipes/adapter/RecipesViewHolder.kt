@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import coil.load
 import com.bumptech.glide.Glide
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.databinding.ItemRecipesBinding
@@ -15,7 +16,7 @@ class RecipesViewHolder(private val binding: ItemRecipesBinding) : ViewHolder(bi
     fun bind(result: Result) {
 
         binding.recipeImage.run {
-            Glide.with(context).load(result.image).into(this)
+            Glide.with(context).load(result.image).error(R.drawable.ic_empty_image).into(this)
         }
 
         binding.titleTextView.text = result.title

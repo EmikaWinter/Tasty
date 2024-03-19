@@ -20,4 +20,11 @@
     <color name="red">#FF4646</color>
     <color name="yellow">#FFC114</color>
     <color name="green">#00C980</color>
+
+    // Custom Chip Style
+    <color name="checkedChipBackgroundColor">#20F76808</color>
+    <color name="chipBackgroundColor">@color/lightGrey</color>
+    <color name="checkedChipTextColor">@color/colorPrimary</color>
+    <color name="chipTextColor">@color/darkGrey</color>
+
 </resources>
