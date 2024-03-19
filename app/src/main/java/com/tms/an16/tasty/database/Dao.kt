@@ -5,9 +5,9 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.foody.data.database.entities.FavoritesEntity
-import com.example.foody.data.database.entities.FoodJokeEntity
-import com.example.foody.data.database.entities.RecipesEntity
+import com.tms.an16.tasty.database.entity.RecipesEntity
+import com.tms.an16.tasty.database.entity.FavoritesEntity
+import com.tms.an16.tasty.database.entity.FoodJokeEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -25,15 +25,15 @@ interface Dao {
     @Query("SELECT * FROM recipes_table ORDER BY id ASC")
     fun readRecipes(): Flow<List<RecipesEntity>>
 
-//    @Query("SELECT * FROM favorite_recipes_table ORDER BY id ASC")
-//    fun readFavoriteRecipes(): Flow<List<FavoritesEntity>>
-//
-//    @Query("SELECT * FROM food_joke_table ORDER BY id ASC")
-//    fun readFoodJoke(): Flow<List<FoodJokeEntity>>
-//
-//    @Delete
-//    suspend fun deleteFavoriteRecipe(favoritesEntity: FavoritesEntity)
-//
-//    @Query("DELETE FROM favorite_recipes_table")
-//    suspend fun deleteAllFavoriteRecipes()
+    @Query("SELECT * FROM favorite_recipes_table ORDER BY id ASC")
+    fun readFavoriteRecipes(): Flow<List<FavoritesEntity>>
+
+    @Query("SELECT * FROM food_joke_table ORDER BY id ASC")
+    fun readFoodJoke(): Flow<List<FoodJokeEntity>>
+
+    @Delete
+    suspend fun deleteFavoriteRecipe(favoritesEntity: FavoritesEntity)
+
+    @Query("DELETE FROM favorite_recipes_table")
+    suspend fun deleteAllFavoriteRecipes()
 }

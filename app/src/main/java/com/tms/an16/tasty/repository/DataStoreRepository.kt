@@ -3,6 +3,7 @@ package com.tms.an16.tasty.repository
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.widget.Toast
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -19,6 +20,7 @@ import com.tms.an16.tasty.util.Constants.Companion.PREFERENCES_DIET_TYPE_ID
 import com.tms.an16.tasty.util.Constants.Companion.PREFERENCES_MEAL_TYPE
 import com.tms.an16.tasty.util.Constants.Companion.PREFERENCES_MEAL_TYPE_ID
 import com.tms.an16.tasty.util.Constants.Companion.PREFERENCES_NAME
+import dagger.hilt.android.internal.Contexts
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
@@ -56,25 +58,6 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
         }
     }
 
-    suspend fun saveBackOnline(backOnline: Boolean) {
-        dataStore.edit { preferences ->
-            preferences[PreferenceKeys.backOnline] = backOnline
-        }
-    }
-
-    fun hasInternetConnection(): Boolean {
-        val connectivityManager = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
-        val activeNetwork = connectivityManager.activeNetwork ?: return false
-        val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-        return when {
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            else -> false
-        }
-    }
 
     val readMealAndDietType: Flow<MealAndDietType> = dataStore.data
         .catch { exception ->
@@ -109,6 +92,26 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
             val backOnline = preferences[PreferenceKeys.backOnline] ?: false
             backOnline
         }
+
+    suspend fun saveBackOnline(backOnline: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferenceKeys.backOnline] = backOnline
+        }
+    }
+
+    fun hasInternetConnection(): Boolean {
+        val connectivityManager = context.getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+        return when {
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            else -> false
+        }
+    }
 }
 
 data class MealAndDietType(

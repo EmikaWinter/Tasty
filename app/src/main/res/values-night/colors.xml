@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    // Custom Chip Style
+    <color name="checkedChipBackgroundColor">@color/darkerGrey</color>
+    <color name="chipBackgroundColor">@color/dark</color>
+    <color name="checkedChipTextColor">@color/lightGrey</color>
+    <color name="chipTextColor">@color/lightGrey</color>
+</resources>
