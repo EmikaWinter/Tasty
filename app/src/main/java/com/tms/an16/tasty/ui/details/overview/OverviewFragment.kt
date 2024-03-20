@@ -1,4 +1,4 @@
-package com.tms.an16.tasty.ui
+package com.tms.an16.tasty.ui.details.overview
 
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
-import coil.load
+import com.bumptech.glide.Glide
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.databinding.FragmentOverviewBinding
 import com.tms.an16.tasty.model.Result
@@ -36,7 +36,9 @@ class OverviewFragment : Fragment() {
         val myBundle: Result? = args?.getParcelable(RECIPE_RESULT_KEY)
 
         if (myBundle != null) {
-            binding!!.mainImageView.load(myBundle.image)
+            binding!!.mainImageView.run {
+                Glide.with(requireContext()).load(myBundle.image).into(this)
+            }
             binding!!.titleTextView.text = myBundle.title
             binding!!.likesTextView.text = myBundle.aggregateLikes.toString()
             binding!!.timeTextView.text = myBundle.readyInMinutes.toString()

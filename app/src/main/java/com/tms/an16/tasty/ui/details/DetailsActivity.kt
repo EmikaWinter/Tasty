@@ -10,9 +10,9 @@ import androidx.navigation.navArgs
 import com.google.android.material.tabs.TabLayoutMediator
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.databinding.ActivityDetailsBinding
-import com.tms.an16.tasty.ui.IngredientsFragment
-import com.tms.an16.tasty.ui.InstructionsFragment
-import com.tms.an16.tasty.ui.OverviewFragment
+import com.tms.an16.tasty.ui.details.ingredients.IngredientsFragment
+import com.tms.an16.tasty.ui.details.instructions.InstructionsFragment
+import com.tms.an16.tasty.ui.details.overview.OverviewFragment
 import com.tms.an16.tasty.ui.details.adapter.PagerAdapter
 import com.tms.an16.tasty.util.Constants.Companion.RECIPE_RESULT_KEY
 import dagger.hilt.android.AndroidEntryPoint

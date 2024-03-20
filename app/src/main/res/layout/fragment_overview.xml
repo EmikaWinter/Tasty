@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.OverviewFragment">
+    android:background="@color/lightGrey"
+    tools:context=".ui.details.overview.OverviewFragment">
 
     <ImageView
         android:id="@+id/main_imageView"
