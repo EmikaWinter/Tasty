@@ -5,27 +5,34 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import coil.load
 import com.bumptech.glide.Glide
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.databinding.ItemRecipesBinding
 import com.tms.an16.tasty.model.Result
+import com.tms.an16.tasty.util.parseHtml
 
 class RecipesViewHolder(private val binding: ItemRecipesBinding) : ViewHolder(binding.root) {
 
-    fun bind(result: Result) {
+    fun bind(
+        result: Result,
+        onClick: (result: Result) -> Unit
+    ) {
 
         binding.recipeImage.run {
             Glide.with(context).load(result.image).error(R.drawable.ic_empty_image).into(this)
         }
 
         binding.titleTextView.text = result.title
-        binding.descriptionTextView.text = result.summary
+        parseHtml(binding.descriptionTextView, result.summary)
         binding.favTextView.text = result.aggregateLikes.toString()
         binding.timeTextView.text = result.readyInMinutes.toString()
 
         applyVeganColor(binding.veganImageView, result.vegan)
         applyVeganColor(binding.veganTextView, result.vegan)
+
+        binding.root.setOnClickListener {
+            onClick(result)
+        }
 
     }
 
@@ -40,6 +47,7 @@ class RecipesViewHolder(private val binding: ItemRecipesBinding) : ViewHolder(bi
                         )
                     )
                 }
+
                 is ImageView -> {
                     view.setColorFilter(
                         ContextCompat.getColor(

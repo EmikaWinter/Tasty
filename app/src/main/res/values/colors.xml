@@ -15,6 +15,7 @@
     <color name="darkGrey">#505050</color>
     <color name="darkerGrey">#3E3E3E</color>
     <color name="dark">#2E2E2E</color>
+    <color name="darker">#151B20</color>
     <color name="black">#FF000000</color>
 
     <color name="red">#FF4646</color>
