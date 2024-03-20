@@ -1,13 +1,14 @@
 package com.tms.an16.tasty.ui.recipes.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.tms.an16.tasty.databinding.ItemRecipesBinding
 import com.tms.an16.tasty.model.Result
 
-class RecipesAdapter :
+class RecipesAdapter(private val onClick: (result: Result) -> Unit) :
     ListAdapter<Result, RecipesViewHolder>(object : DiffUtil.ItemCallback<Result>() {
         override fun areItemsTheSame(oldItem: Result, newItem: Result): Boolean {
             return oldItem.recipeId == newItem.recipeId
@@ -24,6 +25,6 @@ class RecipesAdapter :
     }
 
     override fun onBindViewHolder(holder: RecipesViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onClick)
     }
 }

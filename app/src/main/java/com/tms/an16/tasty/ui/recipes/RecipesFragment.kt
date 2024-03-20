@@ -16,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -190,7 +191,14 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
         binding?.recyclerView?.run {
             if (adapter == null) {
                 layoutManager = LinearLayoutManager(requireContext())
-                adapter = RecipesAdapter()
+                adapter = RecipesAdapter { result ->
+                    findNavController().navigate(
+                        RecipesFragmentDirections.actionRecipesFragmentToDetailsActivity(
+                            result
+                        )
+                    )
+
+                }
             }
             (adapter as? RecipesAdapter)?.submitList(list)
         }
