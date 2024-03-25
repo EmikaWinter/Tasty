@@ -37,4 +37,10 @@
     <string name="dairy_free">Dairy free</string>
     <string name="healthy">Healthy</string>
     <string name="cheap">Cheap</string>
+    <string name="share">Share</string>
+    <string name="save_as_pdf">Save as PDF</string>
+    <string name="menu">Menu</string>
+    <string name="save_to_favorites">Save to Favorites</string>
+    <string name="no_favorite_recipes">No Favorite Recipes</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -25,12 +25,18 @@
         android:id="@+id/favoriteRecipesFragment"
         android:name="com.tms.an16.tasty.ui.favorite.FavoriteRecipesFragment"
         android:label="Favorites"
-        tools:layout="@layout/fragment_favorite_recipes" />
+        tools:layout="@layout/fragment_favorite_recipes" >
+        <action
+            android:id="@+id/action_favoriteRecipesFragment_to_detailsActivity"
+            app:destination="@id/detailsActivity" />
+    </fragment>
     <fragment
         android:id="@+id/foodJokeFragment"
         android:name="com.tms.an16.tasty.ui.foodjoke.FoodJokeFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_food_joke" />
+        tools:layout="@layout/fragment_food_joke" >
+
+    </fragment>
     <dialog
         android:id="@+id/recipesBottomSheet"
         android:name="com.tms.an16.tasty.ui.recipes.bottomsheet.RecipesBottomSheet"

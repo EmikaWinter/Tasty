@@ -1,14 +1,11 @@
 package com.tms.an16.tasty.ui.recipes.adapter
 
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.databinding.ItemRecipesBinding
 import com.tms.an16.tasty.model.Result
+import com.tms.an16.tasty.util.applyVeganColor
 import com.tms.an16.tasty.util.parseHtml
 
 class RecipesViewHolder(private val binding: ItemRecipesBinding) : ViewHolder(binding.root) {
@@ -17,46 +14,22 @@ class RecipesViewHolder(private val binding: ItemRecipesBinding) : ViewHolder(bi
         result: Result,
         onClick: (result: Result) -> Unit
     ) {
+        binding.run {
+            recipeImage.run {
+                Glide.with(context).load(result.image).error(R.drawable.ic_empty_image).into(this)
+            }
+            titleTextView.text = result.title
+            favTextView.text = result.aggregateLikes.toString()
+            timeTextView.text = result.readyInMinutes.toString()
 
-        binding.recipeImage.run {
-            Glide.with(context).load(result.image).error(R.drawable.ic_empty_image).into(this)
+            parseHtml(this.descriptionTextView, result.summary)
+
+            applyVeganColor(this.veganImageView, result.vegan)
+            applyVeganColor(this.veganTextView, result.vegan)
         }
-
-        binding.titleTextView.text = result.title
-        parseHtml(binding.descriptionTextView, result.summary)
-        binding.favTextView.text = result.aggregateLikes.toString()
-        binding.timeTextView.text = result.readyInMinutes.toString()
-
-        applyVeganColor(binding.veganImageView, result.vegan)
-        applyVeganColor(binding.veganTextView, result.vegan)
 
         binding.root.setOnClickListener {
             onClick(result)
-        }
-
-    }
-
-    private fun applyVeganColor(view: View, vegan: Boolean) {
-        if (vegan) {
-            when (view) {
-                is TextView -> {
-                    view.setTextColor(
-                        ContextCompat.getColor(
-                            view.context,
-                            R.color.green
-                        )
-                    )
-                }
-
-                is ImageView -> {
-                    view.setColorFilter(
-                        ContextCompat.getColor(
-                            view.context,
-                            R.color.green
-                        )
-                    )
-                }
-            }
         }
     }
 }

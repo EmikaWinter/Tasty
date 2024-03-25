@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 interface Dao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRecipes(recipesEntity: RecipesEntity)
+    suspend fun insertRecipe(recipesEntity: RecipesEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFavoriteRecipe(favoritesEntity: FavoritesEntity)

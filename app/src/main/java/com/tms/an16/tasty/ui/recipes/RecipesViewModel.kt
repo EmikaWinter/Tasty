@@ -161,7 +161,7 @@ class RecipesViewModel @Inject constructor(
 
     private fun offlineCacheRecipes(foodRecipe: FoodRecipe) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.local.insertRecipes(RecipesEntity(foodRecipe))
+            repository.local.insertRecipe(RecipesEntity(foodRecipe))
         }
     }
 

@@ -10,10 +10,10 @@ import androidx.navigation.navArgs
 import com.google.android.material.tabs.TabLayoutMediator
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.databinding.ActivityDetailsBinding
+import com.tms.an16.tasty.ui.details.adapter.PagerAdapter
 import com.tms.an16.tasty.ui.details.ingredients.IngredientsFragment
 import com.tms.an16.tasty.ui.details.instructions.InstructionsFragment
 import com.tms.an16.tasty.ui.details.overview.OverviewFragment
-import com.tms.an16.tasty.ui.details.adapter.PagerAdapter
 import com.tms.an16.tasty.util.Constants.Companion.RECIPE_RESULT_KEY
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -60,12 +60,12 @@ class DetailsActivity : AppCompatActivity() {
         TabLayoutMediator(binding!!.tabLayout, binding!!.viewPager2) { tab, position ->
             tab.text = titles[position]
         }.attach()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.details_menu, menu)
-//        menuItem = menu!!.findItem(R.id.save_to_favorites_menu)
-//        checkSavedRecipes(menuItem)
+        menuInflater.inflate(R.menu.details_menu, menu)
+
         return true
     }
 
@@ -74,14 +74,15 @@ class DetailsActivity : AppCompatActivity() {
             android.R.id.home -> {
                 finish()
             }
+
+            R.id.share_recipe -> {
+//              TODO
+            }
+
+            R.id.save_as_pdf_recipe -> {
+//              TODO
+            }
         }
-//        if (item.itemId == android.R.id.home) {
-//            finish()
-//        } else if (item.itemId == R.id.save_to_favorites_menu && !recipeSaved) {
-//            saveToFavorites(item)
-//        } else if (item.itemId == R.id.save_to_favorites_menu && recipeSaved) {
-//            removeFromFavorites(item)
-//        }
-            return super.onOptionsItemSelected(item)
-        }
+        return super.onOptionsItemSelected(item)
     }
+}

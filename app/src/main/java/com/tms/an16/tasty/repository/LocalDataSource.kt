@@ -23,11 +23,11 @@ class LocalDataSource @Inject constructor(
         return recipesDao.readFoodJoke()
     }
 
-    suspend fun insertRecipes(recipesEntity: RecipesEntity) {
-        recipesDao.insertRecipes(recipesEntity)
+    suspend fun insertRecipe(recipesEntity: RecipesEntity) {
+        recipesDao.insertRecipe(recipesEntity)
     }
 
-    suspend fun insertFavoriteRecipes(favoritesEntity: FavoritesEntity) {
+    suspend fun insertFavoriteRecipe(favoritesEntity: FavoritesEntity) {
         recipesDao.insertFavoriteRecipe(favoritesEntity)
     }
 

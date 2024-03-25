@@ -7,7 +7,7 @@ import com.tms.an16.tasty.util.Constants.Companion.RECIPES_TABLE
 
 
 @Entity(tableName = RECIPES_TABLE)
-class RecipesEntity(
+data class RecipesEntity(
     var foodRecipe: FoodRecipe
 ) {
     @PrimaryKey(autoGenerate = false)

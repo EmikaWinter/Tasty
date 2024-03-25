@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.tms.an16.tasty"
-        minSdk = 26
+        minSdk = 29
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
