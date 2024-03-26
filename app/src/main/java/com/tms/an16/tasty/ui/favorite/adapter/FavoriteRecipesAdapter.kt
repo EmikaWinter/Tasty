@@ -9,6 +9,7 @@ import com.tms.an16.tasty.databinding.ItemRecipesBinding
 
 class FavoriteRecipesAdapter(
     private val onClick: (favorite: FavoritesEntity) -> Unit,
+    private val onLongClick: (favorite: FavoritesEntity) -> Unit,
 ) :
     ListAdapter<FavoritesEntity, FavoriteRecipesViewHolder>(object :
         DiffUtil.ItemCallback<FavoritesEntity>() {
@@ -31,6 +32,7 @@ class FavoriteRecipesAdapter(
     }
 
     override fun onBindViewHolder(holder: FavoriteRecipesViewHolder, position: Int) {
-        holder.bind(getItem(position), onClick)
+        holder.bind(getItem(position), onClick, onLongClick)
+
     }
 }

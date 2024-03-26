@@ -13,6 +13,7 @@ class FavoriteRecipesViewHolder(private val binding: ItemRecipesBinding) :
     fun bind(
         favorite: FavoritesEntity,
         onClick: (favorite: FavoritesEntity) -> Unit,
+        onLongClick: (favorite: FavoritesEntity) -> Unit,
     ) {
         binding.run {
             recipeImage.run {
@@ -30,6 +31,11 @@ class FavoriteRecipesViewHolder(private val binding: ItemRecipesBinding) :
 
         binding.root.setOnClickListener {
             onClick(favorite)
+        }
+
+        binding.root.setOnLongClickListener {
+            onLongClick(favorite)
+            true
         }
     }
 }

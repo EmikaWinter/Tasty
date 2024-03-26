@@ -2,12 +2,22 @@ package com.tms.an16.tasty.ui.favorite
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
+import com.tms.an16.tasty.R
 import com.tms.an16.tasty.database.entity.FavoritesEntity
 import com.tms.an16.tasty.databinding.FragmentFavoriteRecipesBinding
 import com.tms.an16.tasty.ui.favorite.adapter.FavoriteRecipesAdapter
@@ -37,19 +47,59 @@ class FavoriteRecipesFragment : Fragment() {
             setNoDataError(it)
         }
 
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.fav_recipes_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                if (menuItem.itemId == R.id.delete_all) {
+                    viewModel.deleteAllFavoriteRecipes()
+
+                    Snackbar.make(
+                        requireView(),
+                        "All recipes removed.",
+                        Snackbar.LENGTH_SHORT
+                    ).setAction("Okay") {}
+                        .show()
+                }
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
     }
 
     private fun setList(list: List<FavoritesEntity>) {
         binding?.recyclerView?.run {
             if (adapter == null) {
                 layoutManager = LinearLayoutManager(requireContext())
-                adapter = FavoriteRecipesAdapter { favorite ->
+                adapter = FavoriteRecipesAdapter ( onClick = { favorite ->
                     findNavController().navigate(
                         FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToDetailsActivity(
                             favorite.result
                         )
                     )
-                }
+                }, onLongClick = { favorite ->
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle("Delete this recipe from favorites?")
+                        .setIcon(R.drawable.ic_delete)
+                        .setMessage("This action cannot be undone")
+                        .setPositiveButton("Yes") { dialog, _ ->
+
+                            viewModel.deleteFavoriteRecipe(favorite)
+
+                            dialog.dismiss()
+                            Toast.makeText(
+                                requireContext(), "Deleted", Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        .setNegativeButton("No") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .create()
+                        .show()
+                })
             }
             (adapter as? FavoriteRecipesAdapter)?.submitList(list)
         }
