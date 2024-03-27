@@ -174,7 +174,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private fun loadDataFromCache() {
         viewModel.readRecipes.observe(viewLifecycleOwner) { database ->
-            if (database.isNotEmpty()) {
+            if (!database.isNullOrEmpty()) {
                 setList(database.first().foodRecipe.results)
             } else {
                 setNoInternetError()

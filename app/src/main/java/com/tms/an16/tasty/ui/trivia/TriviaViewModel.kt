@@ -10,6 +10,7 @@ import com.tms.an16.tasty.model.Trivia
 import com.tms.an16.tasty.repository.DataStoreRepository
 import com.tms.an16.tasty.repository.Repository
 import com.tms.an16.tasty.util.NetworkResult
+import com.tms.an16.tasty.util.handleResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,24 +49,7 @@ class TriviaViewModel @Inject constructor(
     }
 
     private fun handleTriviaResponse(response: Response<Trivia>): NetworkResult<Trivia> {
-//        return handleResponse(response)
-        return when {
-            response.message().toString().contains("timeout") -> {
-                NetworkResult.Error("Timeout")
-            }
-
-            response.code() == 402 -> {
-                NetworkResult.Error("API Key Limited.")
-            }
-
-            response.isSuccessful -> {
-                NetworkResult.Success(response.body()!!)
-            }
-
-            else -> {
-                NetworkResult.Error(response.message())
-            }
-        }
+        return handleResponse(response)
     }
 
     private fun offlineCacheTrivia(trivia: Trivia) {

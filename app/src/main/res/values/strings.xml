@@ -44,4 +44,6 @@
     <string name="delete">Delete</string>
     <string name="delete_all">Delete All</string>
     <string name="trivia">Trivia</string>
+    <string name="interesting_fact">Interesting fact!</string>
+    <string name="awesome_recipe_check_it_out">Here is some awesome recipe! Check it out!</string>
 </resources>

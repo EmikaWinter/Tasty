@@ -24,6 +24,7 @@ import com.tms.an16.tasty.util.Constants.Companion.QUERY_NUMBER
 import com.tms.an16.tasty.util.Constants.Companion.QUERY_SEARCH
 import com.tms.an16.tasty.util.Constants.Companion.QUERY_TYPE
 import com.tms.an16.tasty.util.NetworkResult
+import com.tms.an16.tasty.util.handleResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -166,26 +167,6 @@ class RecipesViewModel @Inject constructor(
     }
 
     private fun handleFoodRecipesResponse(response: Response<FoodRecipe>): NetworkResult<FoodRecipe> {
-        when {
-            response.message().toString().contains("timeout") -> {
-                return NetworkResult.Error("Timeout")
-            }
-
-            response.code() == 402 -> {
-                return NetworkResult.Error("API Key Limited.")
-            }
-
-            response.body()!!.results.isEmpty() -> {
-                return NetworkResult.Error("Recipes not found.")
-            }
-
-            response.isSuccessful -> {
-                return NetworkResult.Success(response.body()!!)
-            }
-
-            else -> {
-                return NetworkResult.Error(response.message())
-            }
-        }
+        return handleResponse(response)
     }
 }
