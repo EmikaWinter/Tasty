@@ -1,4 +1,4 @@
-package com.tms.an16.tasty.util
+package com.tms.an16.tasty.controller
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -6,9 +6,9 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class NetworkListener : ConnectivityManager.NetworkCallback() {
+object NetworkController : ConnectivityManager.NetworkCallback() {
 
-    private val isNetworkAvailable = MutableStateFlow(false)
+    val isNetworkConnected = MutableStateFlow(false)
 
     fun checkNetworkAvailability(context: Context): MutableStateFlow<Boolean> {
         val connectivityManager =
@@ -18,37 +18,37 @@ class NetworkListener : ConnectivityManager.NetworkCallback() {
         val network =
             connectivityManager.activeNetwork
         if (network == null) {
-            isNetworkAvailable.value = false
-            return isNetworkAvailable
+            isNetworkConnected.value = false
+            return isNetworkConnected
         }
 
         val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
         if (networkCapabilities == null) {
-            isNetworkAvailable.value = false
-            return isNetworkAvailable
+            isNetworkConnected.value = false
+            return isNetworkConnected
         }
 
         return when {
             networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
-                isNetworkAvailable.value = true
-                isNetworkAvailable
+                isNetworkConnected.value = true
+                isNetworkConnected
             }
             networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
-                isNetworkAvailable.value = true
-                isNetworkAvailable
+                isNetworkConnected.value = true
+                isNetworkConnected
             }
             else -> {
-                isNetworkAvailable.value = false
-                isNetworkAvailable
+                isNetworkConnected.value = false
+                isNetworkConnected
             }
         }
     }
 
     override fun onAvailable(network: Network) {
-        isNetworkAvailable.value = true
+        isNetworkConnected.value = true
     }
 
     override fun onLost(network: Network) {
-        isNetworkAvailable.value = false
+        isNetworkConnected.value = false
     }
 }

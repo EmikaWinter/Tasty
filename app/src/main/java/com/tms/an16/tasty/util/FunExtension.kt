@@ -1,5 +1,7 @@
 package com.tms.an16.tasty.util
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -50,7 +52,7 @@ fun applyVeganColor(view: View, vegan: Boolean) {
     }
 }
 
-fun<T> handleResponse(response: Response<T>): NetworkResult<T> {
+fun <T> handleResponse(response: Response<T>): NetworkResult<T> {
     return when {
         response.message().toString().contains("timeout") -> {
             NetworkResult.Error("Timeout")
@@ -68,4 +70,10 @@ fun<T> handleResponse(response: Response<T>): NetworkResult<T> {
             NetworkResult.Error(response.message())
         }
     }
+}
+
+fun Context.isNetworkConnected(): Boolean {
+    return (getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager)?.run {
+        activeNetworkInfo?.isConnected == true
+    } == true
 }

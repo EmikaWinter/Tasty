@@ -24,7 +24,7 @@ import com.tms.an16.tasty.R
 import com.tms.an16.tasty.databinding.FragmentRecipesBinding
 import com.tms.an16.tasty.model.Result
 import com.tms.an16.tasty.ui.recipes.adapter.RecipesAdapter
-import com.tms.an16.tasty.util.NetworkListener
+import com.tms.an16.tasty.controller.NetworkController
 import com.tms.an16.tasty.util.NetworkResult
 import com.tms.an16.tasty.util.observeOnce
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +37,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private lateinit var viewModel: RecipesViewModel
 
-    private lateinit var networkListener: NetworkListener
+    private lateinit var networkController: NetworkController
 
     private val args by navArgs<RecipesFragmentArgs>()
 
@@ -64,8 +64,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
         lifecycleScope.launch {
             repeatOnLifecycle(state = Lifecycle.State.STARTED) {
-                networkListener = NetworkListener()
-                networkListener.checkNetworkAvailability(requireContext())
+                NetworkController.checkNetworkAvailability(requireContext())
                     .collect { status ->
                         viewModel.networkStatus = status
                         viewModel.showNetworkStatus(requireContext())
