@@ -3,9 +3,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="recipes">Recipes</string>
     <string name="favorite_recipes">Favorites</string>
-    <string name="profile">Profile</string>
     <string name="no_internet_connection">No Internet Connection</string>
-    <string name="food_joke">Food Joke</string>
     <string name="meal_type">Meal Type</string>
     <string name="main_course">Main Course</string>
     <string name="drink">Drink</string>
@@ -33,7 +31,6 @@
     <string name="apply">Apply</string>
     <string name="search">Search</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="dairy_free">Dairy free</string>
     <string name="healthy">Healthy</string>
     <string name="cheap">Cheap</string>
@@ -44,4 +41,7 @@
     <string name="no_favorite_recipes">No Favorite Recipes</string>
     <string name="delete">Delete</string>
     <string name="delete_all">Delete All</string>
+    <string name="trivia">Trivia</string>
+    <string name="interesting_fact">Interesting fact!</string>
+    <string name="awesome_recipe_check_it_out">Here is some awesome recipe! Check it out!</string>
 </resources>

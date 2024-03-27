@@ -87,12 +87,7 @@ class OverviewFragment : Fragment() {
             try {
                 for (savedRecipe in favoritesEntity) {
                     if (savedRecipe.result.recipeId == id) {
-                        binding?.saveToFavImageView?.setColorFilter(
-                            getColor(
-                                binding!!.saveToFavImageView.context,
-                                R.color.yellow
-                            )
-                        )
+                        setColorToSaveToFavImage(R.color.yellow)
                         savedRecipeId = savedRecipe.id
                         recipeSaved = true
                     }
@@ -105,12 +100,7 @@ class OverviewFragment : Fragment() {
 
     private fun saveToFavorites(favoritesEntity: FavoritesEntity) {
         viewModel.insertFavoriteRecipe(favoritesEntity)
-        binding?.saveToFavImageView?.setColorFilter(
-            getColor(
-                binding!!.saveToFavImageView.context,
-                R.color.yellow
-            )
-        )
+        setColorToSaveToFavImage(R.color.yellow)
         showSnackBar("Recipe saved")
         recipeSaved = true
     }
@@ -118,12 +108,7 @@ class OverviewFragment : Fragment() {
     private fun deleteFromFavorites(recipeResult: Result) {
         val favoritesEntity = FavoritesEntity(savedRecipeId, recipeResult)
         viewModel.deleteFavoriteRecipe(favoritesEntity)
-        binding?.saveToFavImageView?.setColorFilter(
-            getColor(
-                binding!!.saveToFavImageView.context,
-                R.color.white
-            )
-        )
+        setColorToSaveToFavImage(R.color.white)
         showSnackBar("Removed from Favorites")
         recipeSaved = false
     }
@@ -135,6 +120,14 @@ class OverviewFragment : Fragment() {
             Snackbar.LENGTH_SHORT
         ).setAction("Okay") {}
             .show()
+    }
+
+    private fun setColorToSaveToFavImage(color: Int){
+        binding?.run {
+            saveToFavImageView.setColorFilter(
+                getColor(this.saveToFavImageView.context, color)
+            )
+        }
     }
 
     private fun updateColors(state: Boolean, textView: TextView) {

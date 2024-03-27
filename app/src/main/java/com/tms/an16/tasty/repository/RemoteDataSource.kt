@@ -1,6 +1,6 @@
 package com.tms.an16.tasty.repository
 
-import com.tms.an16.tasty.model.FoodJoke
+import com.tms.an16.tasty.model.Trivia
 import com.tms.an16.tasty.model.FoodRecipe
 import com.tms.an16.tasty.network.Api
 import retrofit2.Response
@@ -18,8 +18,8 @@ class RemoteDataSource @Inject constructor(
         return api.searchRecipes(searchQuery)
     }
 
-    suspend fun getFoodJoke(apiKey: String): Response<FoodJoke> {
-        return api.getFoodJoke(apiKey)
+    suspend fun getTrivia(apiKey: String): Response<Trivia> {
+        return api.getTrivia(apiKey)
     }
 
 }

@@ -7,7 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.tms.an16.tasty.database.entity.RecipesEntity
 import com.tms.an16.tasty.database.entity.FavoritesEntity
-import com.tms.an16.tasty.database.entity.FoodJokeEntity
+import com.tms.an16.tasty.database.entity.TriviaEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -20,7 +20,7 @@ interface Dao {
     suspend fun insertFavoriteRecipe(favoritesEntity: FavoritesEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFoodJoke(foodJokeEntity: FoodJokeEntity)
+    suspend fun insertTrivia(triviaEntity: TriviaEntity)
 
     @Query("SELECT * FROM recipes_table ORDER BY id ASC")
     fun readRecipes(): Flow<List<RecipesEntity>>
@@ -28,8 +28,8 @@ interface Dao {
     @Query("SELECT * FROM favorite_recipes_table ORDER BY id ASC")
     fun readFavoriteRecipes(): Flow<List<FavoritesEntity>>
 
-    @Query("SELECT * FROM food_joke_table ORDER BY id ASC")
-    fun readFoodJoke(): Flow<List<FoodJokeEntity>>
+    @Query("SELECT * FROM trivia_table ORDER BY id ASC")
+    fun readTrivia(): Flow<List<TriviaEntity>>
 
     @Delete
     suspend fun deleteFavoriteRecipe(favoritesEntity: FavoritesEntity)

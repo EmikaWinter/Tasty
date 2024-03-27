@@ -1,5 +1,6 @@
 package com.tms.an16.tasty.ui.details
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -10,6 +11,7 @@ import androidx.navigation.navArgs
 import com.google.android.material.tabs.TabLayoutMediator
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.databinding.ActivityDetailsBinding
+import com.tms.an16.tasty.model.Result
 import com.tms.an16.tasty.ui.details.adapter.PagerAdapter
 import com.tms.an16.tasty.ui.details.ingredients.IngredientsFragment
 import com.tms.an16.tasty.ui.details.instructions.InstructionsFragment
@@ -17,12 +19,17 @@ import com.tms.an16.tasty.ui.details.overview.OverviewFragment
 import com.tms.an16.tasty.util.Constants.Companion.RECIPE_RESULT_KEY
 import dagger.hilt.android.AndroidEntryPoint
 
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class DetailsActivity : AppCompatActivity() {
 
     private var binding: ActivityDetailsBinding? = null
 
     private val args by navArgs<DetailsActivityArgs>()
+
+    private var url = "no data"
+    private var title = "no data"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailsBinding.inflate(layoutInflater)
@@ -45,6 +52,9 @@ class DetailsActivity : AppCompatActivity() {
 
         val resultBundle = Bundle()
         resultBundle.putParcelable(RECIPE_RESULT_KEY, args.result)
+        val result: Result? = resultBundle.getParcelable(RECIPE_RESULT_KEY)
+        url = result?.sourceUrl.toString()
+        title = result?.title.toString()
 
         val pagerAdapter = PagerAdapter(
             resultBundle,
@@ -75,7 +85,15 @@ class DetailsActivity : AppCompatActivity() {
             }
 
             R.id.share_recipe -> {
-//              TODO
+                val shareIntent = Intent().apply {
+                    this.action = Intent.ACTION_SEND
+                    this.putExtra(
+                        Intent.EXTRA_TEXT,
+                        "${getString(R.string.awesome_recipe_check_it_out)} \n $title \n $url"
+                    )
+                    this.type = "text/plain"
+                }
+                startActivity(shareIntent)
             }
 
             R.id.save_as_pdf_recipe -> {

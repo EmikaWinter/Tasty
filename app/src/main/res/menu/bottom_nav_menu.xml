@@ -9,8 +9,8 @@
         android:title="@string/favorite_recipes"
         android:icon="@drawable/ic_star"/>
 
-    <item android:id="@+id/foodJokeFragment"
-        android:title="@string/food_joke"
-        android:icon="@drawable/ic_joke"/>
+    <item android:id="@+id/triviaFragment"
+        android:title="@string/trivia"
+        android:icon="@drawable/ic_trivia"/>
 
 </menu>
