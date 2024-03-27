@@ -8,7 +8,7 @@ import com.tms.an16.tasty.model.Result
 
 class RecipesTypeConverter {
 
-    var gson = Gson()
+    private var gson = Gson()
 
     @TypeConverter
     fun foodRecipeToString(foodRecipe: FoodRecipe): String {

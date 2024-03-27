@@ -8,7 +8,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.tms.an16.tasty.R
-import com.tms.an16.tasty.model.Trivia
 import org.jsoup.Jsoup
 import retrofit2.Response
 

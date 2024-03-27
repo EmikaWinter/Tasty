@@ -52,7 +52,7 @@ class DetailsActivity : AppCompatActivity() {
 
         val resultBundle = Bundle()
         resultBundle.putParcelable(RECIPE_RESULT_KEY, args.result)
-        val result: Result? = resultBundle.getParcelable<Result>(RECIPE_RESULT_KEY)
+        val result: Result? = resultBundle.getParcelable(RECIPE_RESULT_KEY)
         url = result?.sourceUrl.toString()
         title = result?.title.toString()
 

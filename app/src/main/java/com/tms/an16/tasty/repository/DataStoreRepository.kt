@@ -3,7 +3,6 @@ package com.tms.an16.tasty.repository
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.widget.Toast
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -20,7 +19,6 @@ import com.tms.an16.tasty.util.Constants.Companion.PREFERENCES_DIET_TYPE_ID
 import com.tms.an16.tasty.util.Constants.Companion.PREFERENCES_MEAL_TYPE
 import com.tms.an16.tasty.util.Constants.Companion.PREFERENCES_MEAL_TYPE_ID
 import com.tms.an16.tasty.util.Constants.Companion.PREFERENCES_NAME
-import dagger.hilt.android.internal.Contexts
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow

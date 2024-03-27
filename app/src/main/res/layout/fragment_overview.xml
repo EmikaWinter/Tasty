@@ -11,6 +11,7 @@
         android:id="@+id/main_imageView"
         android:layout_width="0dp"
         android:layout_height="250dp"
+        android:importantForAccessibility="no"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,17 +35,18 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="12dp"
-        android:text="100"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/main_imageView"
-        app:layout_constraintEnd_toEndOf="@+id/gradient_overlay" />
+        app:layout_constraintEnd_toEndOf="@+id/gradient_overlay"
+        tools:text="100" />
 
     <ImageView
         android:id="@+id/time_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
         android:src="@drawable/ic_time"
         app:layout_constraintBottom_toTopOf="@+id/time_textView"
         app:layout_constraintEnd_toEndOf="@+id/time_textView"
@@ -56,17 +58,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
-        android:text="100"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/time_textView"
-        app:layout_constraintEnd_toStartOf="@+id/time_textView" />
+        app:layout_constraintEnd_toStartOf="@+id/time_textView"
+        tools:text="100" />
 
     <ImageView
         android:id="@+id/likes_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
         android:src="@drawable/ic_favorite"
         app:layout_constraintBottom_toTopOf="@+id/likes_textView"
         app:layout_constraintEnd_toEndOf="@+id/likes_textView"
@@ -80,10 +83,12 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="4dp"
         android:background="@drawable/gradient_overlay_oval"
+        android:importantForAccessibility="no"
         android:src="@drawable/ic_star"
         app:layout_constraintEnd_toEndOf="@+id/main_imageView"
         app:layout_constraintTop_toTopOf="@+id/main_imageView"
-        app:tint="@color/white" />
+        app:tint="@color/white"
+        tools:ignore="ImageContrastCheck" />
 
     <TextView
         android:id="@+id/title_textView"
@@ -93,13 +98,13 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="12dp"
         android:fontFamily="@font/font_appetite_italic"
-        tools:text="Title"
         android:textColor="@color/darker"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/main_imageView"
+        tools:text="Title" />
 
     <TextView
         android:id="@+id/vegetarian_textView"
