@@ -2,7 +2,7 @@ package com.tms.an16.tasty.repository
 
 import com.tms.an16.tasty.database.Dao
 import com.tms.an16.tasty.database.entity.FavoritesEntity
-import com.tms.an16.tasty.database.entity.FoodJokeEntity
+import com.tms.an16.tasty.database.entity.TriviaEntity
 import com.tms.an16.tasty.database.entity.RecipesEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -19,8 +19,8 @@ class LocalDataSource @Inject constructor(
         return recipesDao.readFavoriteRecipes()
     }
 
-    fun readFoodJoke(): Flow<List<FoodJokeEntity>> {
-        return recipesDao.readFoodJoke()
+    fun readTrivia(): Flow<List<TriviaEntity>> {
+        return recipesDao.readTrivia()
     }
 
     suspend fun insertRecipe(recipesEntity: RecipesEntity) {
@@ -31,8 +31,8 @@ class LocalDataSource @Inject constructor(
         recipesDao.insertFavoriteRecipe(favoritesEntity)
     }
 
-    suspend fun insertFoodJoke(foodJokeEntity: FoodJokeEntity) {
-        recipesDao.insertFoodJoke(foodJokeEntity)
+    suspend fun insertTrivia(triviaEntity: TriviaEntity) {
+        recipesDao.insertTrivia(triviaEntity)
     }
 
     suspend fun deleteFavoriteRecipe(favoritesEntity: FavoritesEntity) {

@@ -5,10 +5,10 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.tms.an16.tasty.database.entity.RecipesEntity
 import com.tms.an16.tasty.database.entity.FavoritesEntity
-import com.tms.an16.tasty.database.entity.FoodJokeEntity
+import com.tms.an16.tasty.database.entity.TriviaEntity
 
 @Database(
-    entities = [RecipesEntity::class, FavoritesEntity::class, FoodJokeEntity::class],
+    entities = [RecipesEntity::class, FavoritesEntity::class, TriviaEntity::class],
     version = 1,
     exportSchema = false
 )

@@ -31,10 +31,10 @@
             app:destination="@id/detailsActivity" />
     </fragment>
     <fragment
-        android:id="@+id/foodJokeFragment"
-        android:name="com.tms.an16.tasty.ui.foodjoke.FoodJokeFragment"
+        android:id="@+id/triviaFragment"
+        android:name="com.tms.an16.tasty.ui.trivia.TriviaFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_food_joke" >
+        tools:layout="@layout/fragment_trivia" >
 
     </fragment>
     <dialog

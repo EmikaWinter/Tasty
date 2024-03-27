@@ -183,8 +183,10 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun setNoInternetError() {
-        binding?.errorImage?.visibility = View.VISIBLE
-        binding?.errorText?.visibility = View.VISIBLE
+        binding?.run {
+            errorImage.visibility = View.VISIBLE
+            errorText.visibility = View.VISIBLE
+        }
     }
 
     private fun setList(list: List<Result>) {
