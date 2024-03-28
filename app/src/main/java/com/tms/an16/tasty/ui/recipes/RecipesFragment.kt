@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -24,8 +23,7 @@ import com.tms.an16.tasty.R
 import com.tms.an16.tasty.databinding.FragmentRecipesBinding
 import com.tms.an16.tasty.model.Result
 import com.tms.an16.tasty.ui.recipes.adapter.RecipesAdapter
-import com.tms.an16.tasty.controller.NetworkController
-import com.tms.an16.tasty.util.NetworkResult
+import com.tms.an16.tasty.network.NetworkResult
 import com.tms.an16.tasty.util.observeOnce
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -37,7 +35,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private lateinit var viewModel: RecipesViewModel
 
-    private lateinit var networkController: NetworkController
+//    private val viewModel : RecipesViewModel by viewModels()
 
     private val args by navArgs<RecipesFragmentArgs>()
 
@@ -58,26 +56,28 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
         viewModel = ViewModelProvider(requireActivity())[RecipesViewModel::class.java]
 
+        readDatabase()
+
         viewModel.readBackOnline.observe(viewLifecycleOwner) {
             viewModel.backOnline = it
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(state = Lifecycle.State.STARTED) {
-                NetworkController.checkNetworkAvailability(requireContext())
-                    .collect { status ->
-                        viewModel.networkStatus = status
-                        viewModel.showNetworkStatus(requireContext())
-                        readDatabase()
+        viewModel.isNetworkConnected.observe(viewLifecycleOwner) {
+            if (it) {
+                binding?.choiceActionButton?.setOnClickListener {
+                        findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
                     }
-            }
-        }
 
-        binding?.choiceActionButton?.setOnClickListener {
-            if (viewModel.networkStatus) {
-                findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
+                if (viewModel.backOnline){
+                    viewModel.showNetworkStatus(requireContext())
+                }
+
             } else {
                 viewModel.showNetworkStatus(requireContext())
+
+                binding?.choiceActionButton?.setOnClickListener {
+                    viewModel.showNetworkStatus(requireContext())
+                }
             }
         }
 
@@ -217,9 +217,8 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
         binding?.recyclerView?.visibility = View.VISIBLE
     }
 
-
     override fun onQueryTextSubmit(query: String?): Boolean {
-        if (query != null) {
+        if (!query.isNullOrEmpty()) {
             searchApiData(query)
         }
         return true

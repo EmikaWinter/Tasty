@@ -1,4 +1,4 @@
-package com.tms.an16.tasty.util
+package com.tms.an16.tasty.network
 
 sealed class NetworkResult<T>(
     val data: T? = null,

@@ -74,7 +74,7 @@ class FavoriteRecipesFragment : Fragment() {
         binding?.recyclerView?.run {
             if (adapter == null) {
                 layoutManager = LinearLayoutManager(requireContext())
-                adapter = FavoriteRecipesAdapter ( onClick = { favorite ->
+                adapter = FavoriteRecipesAdapter(onClick = { favorite ->
                     findNavController().navigate(
                         FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToDetailsActivity(
                             favorite.result
@@ -110,6 +110,11 @@ class FavoriteRecipesFragment : Fragment() {
             binding?.run {
                 noDataImageView.visibility = View.VISIBLE
                 noDataTextView.visibility = View.VISIBLE
+            }
+        } else {
+            binding?.run {
+                noDataImageView.visibility = View.INVISIBLE
+                noDataTextView.visibility = View.INVISIBLE
             }
         }
     }

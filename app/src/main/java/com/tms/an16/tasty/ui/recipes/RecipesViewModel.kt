@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.tms.an16.tasty.controller.NetworkController
 import com.tms.an16.tasty.database.entity.RecipesEntity
 import com.tms.an16.tasty.model.FoodRecipe
 import com.tms.an16.tasty.repository.DataStoreRepository
@@ -23,8 +24,7 @@ import com.tms.an16.tasty.util.Constants.Companion.QUERY_FILL_INGREDIENTS
 import com.tms.an16.tasty.util.Constants.Companion.QUERY_NUMBER
 import com.tms.an16.tasty.util.Constants.Companion.QUERY_SEARCH
 import com.tms.an16.tasty.util.Constants.Companion.QUERY_TYPE
-import com.tms.an16.tasty.util.NetworkResult
-import com.tms.an16.tasty.util.handleResponse
+import com.tms.an16.tasty.network.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,26 +35,36 @@ import javax.inject.Inject
 class RecipesViewModel @Inject constructor(
     private val repository: Repository,
     private val dataStoreRepository: DataStoreRepository,
+    networkController: NetworkController
 ) : ViewModel() {
 
     var recipesResponse = MutableLiveData<NetworkResult<FoodRecipe>>()
 
     val readRecipes: LiveData<List<RecipesEntity>> = repository.local.readRecipes().asLiveData()
 
+    val isNetworkConnected = MutableLiveData<Boolean>()
+
     var networkStatus = false
     var backOnline = false
 
     val readMealAndDietType = dataStoreRepository.readMealAndDietType
+
     val readBackOnline = dataStoreRepository.readBackOnline.asLiveData()
 
     var searchedRecipesResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
 
     private lateinit var mealAndDiet: MealAndDietType
 
+    init {
+        networkController.isNetworkConnected.subscribe {
+            isNetworkConnected.value = it
+        }
+    }
+
     fun getRecipes(queries: Map<String, String>) {
         viewModelScope.launch {
             recipesResponse.value = NetworkResult.Loading()
-            if (dataStoreRepository.hasInternetConnection()) {
+            if (isNetworkConnected.value == true) {
                 try {
                     val response = repository.remote.getRecipes(queries)
                     recipesResponse.value = handleFoodRecipesResponse(response)
@@ -73,17 +83,19 @@ class RecipesViewModel @Inject constructor(
         }
     }
 
-    fun searchRecipes(searchQuery: Map<String, String>) = viewModelScope.launch {
-        searchedRecipesResponse.value = NetworkResult.Loading()
-        if (dataStoreRepository.hasInternetConnection()) {
-            try {
-                val response = repository.remote.searchRecipes(searchQuery)
-                searchedRecipesResponse.value = handleFoodRecipesResponse(response)
-            } catch (e: java.lang.Exception) {
-                searchedRecipesResponse.value = NetworkResult.Error("Recipes not found.")
+    fun searchRecipes(searchQuery: Map<String, String>) {
+        viewModelScope.launch {
+            searchedRecipesResponse.value = NetworkResult.Loading()
+            if (isNetworkConnected.value == true) {
+                try {
+                    val response = repository.remote.searchRecipes(searchQuery)
+                    searchedRecipesResponse.value = handleFoodRecipesResponse(response)
+                } catch (e: java.lang.Exception) {
+                    searchedRecipesResponse.value = NetworkResult.Error("Recipes not found.")
+                }
+            } else {
+                searchedRecipesResponse.value = NetworkResult.Error("No Internet Connection.")
             }
-        } else {
-            searchedRecipesResponse.value = NetworkResult.Error("No Internet Connection.")
         }
     }
 
@@ -143,7 +155,7 @@ class RecipesViewModel @Inject constructor(
     }
 
     fun showNetworkStatus(context: Context) {
-        if (!networkStatus) {
+        if (isNetworkConnected.value != true) {
             Toast.makeText(context, "No Internet Connection.", Toast.LENGTH_SHORT).show()
             saveBackOnline(true)
         } else {
@@ -167,6 +179,26 @@ class RecipesViewModel @Inject constructor(
     }
 
     private fun handleFoodRecipesResponse(response: Response<FoodRecipe>): NetworkResult<FoodRecipe> {
-        return handleResponse(response)
+        return when {
+            response.message().toString().contains("timeout") -> {
+                NetworkResult.Error("Timeout")
+            }
+
+            response.code() == 402 -> {
+                NetworkResult.Error("API Key Limited.")
+            }
+
+            response.body()!!.results.isEmpty() -> {
+                NetworkResult.Error("Recipes not found.")
+            }
+
+            response.isSuccessful -> {
+                NetworkResult.Success(response.body()!!)
+            }
+
+            else -> {
+                NetworkResult.Error(response.message())
+            }
+        }
     }
 }
