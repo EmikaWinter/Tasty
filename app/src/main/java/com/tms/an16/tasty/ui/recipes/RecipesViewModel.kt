@@ -2,31 +2,24 @@ package com.tms.an16.tasty.ui.recipes
 
 import android.content.Context
 import android.widget.Toast
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.tms.an16.tasty.controller.NetworkController
 import com.tms.an16.tasty.database.entity.RecipesEntity
 import com.tms.an16.tasty.model.FoodRecipe
+import com.tms.an16.tasty.network.NetworkResult
 import com.tms.an16.tasty.repository.DataStoreRepository
 import com.tms.an16.tasty.repository.MealAndDietType
 import com.tms.an16.tasty.repository.Repository
-import com.tms.an16.tasty.util.Constants.Companion.API_KEY
 import com.tms.an16.tasty.util.Constants.Companion.DEFAULT_DIET_TYPE
 import com.tms.an16.tasty.util.Constants.Companion.DEFAULT_MEAL_TYPE
-import com.tms.an16.tasty.util.Constants.Companion.DEFAULT_RECIPES_NUMBER
-import com.tms.an16.tasty.util.Constants.Companion.QUERY_ADD_RECIPE_INFORMATION
-import com.tms.an16.tasty.util.Constants.Companion.QUERY_API_KEY
 import com.tms.an16.tasty.util.Constants.Companion.QUERY_DIET
-import com.tms.an16.tasty.util.Constants.Companion.QUERY_FILL_INGREDIENTS
-import com.tms.an16.tasty.util.Constants.Companion.QUERY_NUMBER
-import com.tms.an16.tasty.util.Constants.Companion.QUERY_SEARCH
 import com.tms.an16.tasty.util.Constants.Companion.QUERY_TYPE
-import com.tms.an16.tasty.network.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
@@ -40,24 +33,25 @@ class RecipesViewModel @Inject constructor(
 
     var recipesResponse = MutableLiveData<NetworkResult<FoodRecipe>>()
 
-    val readRecipes: LiveData<List<RecipesEntity>> = repository.local.readRecipes().asLiveData()
+    val readRecipes: Flow<List<RecipesEntity>> = repository.local.readRecipes()
 
     val isNetworkConnected = MutableLiveData<Boolean>()
 
-    var networkStatus = false
     var backOnline = false
 
     val readMealAndDietType = dataStoreRepository.readMealAndDietType
 
-    val readBackOnline = dataStoreRepository.readBackOnline.asLiveData()
+    val readBackOnline: Flow<Boolean> = dataStoreRepository.readBackOnline
 
     var searchedRecipesResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
 
     private lateinit var mealAndDiet: MealAndDietType
 
     init {
-        networkController.isNetworkConnected.subscribe {
-            isNetworkConnected.value = it
+        viewModelScope.launch {
+            networkController.isNetworkConnected.collectLatest {
+                isNetworkConnected.value = it
+            }
         }
     }
 
@@ -126,12 +120,7 @@ class RecipesViewModel @Inject constructor(
     }
 
     fun applyQueries(): HashMap<String, String> {
-        val queries: HashMap<String, String> = HashMap()
-
-        queries[QUERY_NUMBER] = DEFAULT_RECIPES_NUMBER
-        queries[QUERY_API_KEY] = API_KEY
-        queries[QUERY_ADD_RECIPE_INFORMATION] = "true"
-        queries[QUERY_FILL_INGREDIENTS] = "true"
+        val queries: HashMap<String, String> = dataStoreRepository.applyQueries()
 
         if (this@RecipesViewModel::mealAndDiet.isInitialized) {
             queries[QUERY_TYPE] = mealAndDiet.selectedMealType
@@ -140,18 +129,11 @@ class RecipesViewModel @Inject constructor(
             queries[QUERY_TYPE] = DEFAULT_MEAL_TYPE
             queries[QUERY_DIET] = DEFAULT_DIET_TYPE
         }
-
         return queries
     }
 
     fun applySearchQuery(searchQuery: String): HashMap<String, String> {
-        val queries: HashMap<String, String> = HashMap()
-        queries[QUERY_SEARCH] = searchQuery
-        queries[QUERY_NUMBER] = DEFAULT_RECIPES_NUMBER
-        queries[QUERY_API_KEY] = API_KEY
-        queries[QUERY_ADD_RECIPE_INFORMATION] = "true"
-        queries[QUERY_FILL_INGREDIENTS] = "true"
-        return queries
+        return dataStoreRepository.applySearchQuery(searchQuery)
     }
 
     fun showNetworkStatus(context: Context) {

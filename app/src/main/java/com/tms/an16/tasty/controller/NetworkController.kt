@@ -1,10 +1,5 @@
 package com.tms.an16.tasty.controller
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -12,7 +7,7 @@ import javax.inject.Singleton
 @Singleton
 class NetworkController @Inject constructor() {
 
-    val isNetworkConnected = BehaviorSubject.create<Boolean>()
+    val isNetworkConnected = MutableStateFlow(true)
 
 //    fun checkNetworkAvailability(context: Context): MutableStateFlow<Boolean> {
 //        val connectivityManager =

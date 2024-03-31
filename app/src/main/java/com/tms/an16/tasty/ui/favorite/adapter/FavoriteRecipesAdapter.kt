@@ -33,6 +33,5 @@ class FavoriteRecipesAdapter(
 
     override fun onBindViewHolder(holder: FavoriteRecipesViewHolder, position: Int) {
         holder.bind(getItem(position), onClick, onLongClick)
-
     }
 }

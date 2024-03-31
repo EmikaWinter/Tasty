@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.tms.an16.tasty.R
@@ -20,6 +21,8 @@ import com.tms.an16.tasty.model.Result
 import com.tms.an16.tasty.util.Constants.Companion.RECIPE_RESULT_KEY
 import com.tms.an16.tasty.util.parseHtml
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @Suppress("DEPRECATION")
 @AndroidEntryPoint
@@ -83,17 +86,19 @@ class OverviewFragment : Fragment() {
     }
 
     private fun checkSavedRecipes(id: Int) {
-        viewModel.readFavoriteRecipes.observe(viewLifecycleOwner) { favoritesEntity ->
-            try {
-                for (savedRecipe in favoritesEntity) {
-                    if (savedRecipe.result.recipeId == id) {
-                        setColorToSaveToFavImage(R.color.yellow)
-                        savedRecipeId = savedRecipe.id
-                        recipeSaved = true
+        lifecycleScope.launch {
+            viewModel.readFavoriteRecipes.collectLatest { favoritesEntity ->
+                try {
+                    for (savedRecipe in favoritesEntity) {
+                        if (savedRecipe.result.recipeId == id) {
+                            setColorToSaveToFavImage(R.color.yellow)
+                            savedRecipeId = savedRecipe.id
+                            recipeSaved = true
+                        }
                     }
+                } catch (e: Exception) {
+                    Log.d("OverviewFragment", e.message.toString())
                 }
-            } catch (e: Exception) {
-                Log.d("OverviewFragment", e.message.toString())
             }
         }
     }
@@ -122,7 +127,7 @@ class OverviewFragment : Fragment() {
             .show()
     }
 
-    private fun setColorToSaveToFavImage(color: Int){
+    private fun setColorToSaveToFavImage(color: Int) {
         binding?.run {
             saveToFavImageView.setColorFilter(
                 getColor(this.saveToFavImageView.context, color)

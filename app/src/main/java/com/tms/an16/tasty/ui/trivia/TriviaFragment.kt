@@ -17,9 +17,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.databinding.FragmentTriviaBinding
-import com.tms.an16.tasty.util.Constants.Companion.API_KEY
 import com.tms.an16.tasty.network.NetworkResult
+import com.tms.an16.tasty.util.Constants.Companion.API_KEY
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -53,7 +54,10 @@ class TriviaFragment : Fragment() {
                 if (menuItem.itemId == R.id.share_trivia_menu) {
                     val shareIntent = Intent().apply {
                         this.action = Intent.ACTION_SEND
-                        this.putExtra(Intent.EXTRA_TEXT, "${getString(R.string.interesting_fact)} \n $trivia")
+                        this.putExtra(
+                            Intent.EXTRA_TEXT,
+                            "${getString(R.string.interesting_fact)} \n $trivia"
+                        )
                         this.type = "text/plain"
                     }
                     startActivity(shareIntent)
@@ -109,8 +113,8 @@ class TriviaFragment : Fragment() {
 
     private fun loadDataFromCache() {
         lifecycleScope.launch {
-            viewModel.readTrivia.observe(viewLifecycleOwner) { database ->
-                if (!database.isNullOrEmpty()) {
+            viewModel.readTrivia.collectLatest { database ->
+                if (database.isNotEmpty()) {
                     binding?.run {
                         triviaCardView.visibility = View.VISIBLE
                         interestingFactTextView.visibility = View.VISIBLE
