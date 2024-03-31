@@ -7,7 +7,7 @@ import javax.inject.Singleton
 @Singleton
 class NetworkController @Inject constructor() {
 
-    val isNetworkConnected = MutableStateFlow(true)
+    val isNetworkConnected = MutableStateFlow(NetworkState.UNKNOWN)
 
 //    fun checkNetworkAvailability(context: Context): MutableStateFlow<Boolean> {
 //        val connectivityManager =
@@ -50,4 +50,10 @@ class NetworkController @Inject constructor() {
 //    override fun onLost(network: Network) {
 //        isNetworkConnected.value = false
 //    }
+}
+
+enum class NetworkState {
+    CONNECTED,
+    DISCONNECTED,
+    UNKNOWN
 }

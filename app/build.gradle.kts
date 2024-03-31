@@ -70,6 +70,9 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
+//    non-null binding 
+//    implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.9")
+
     implementation("io.coil-kt:coil:2.6.0")
     implementation("com.github.bumptech.glide:glide:4.15.1")
 

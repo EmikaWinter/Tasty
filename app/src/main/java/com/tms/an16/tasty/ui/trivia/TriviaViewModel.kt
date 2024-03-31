@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tms.an16.tasty.controller.NetworkController
+import com.tms.an16.tasty.controller.NetworkState
 import com.tms.an16.tasty.database.entity.TriviaEntity
 import com.tms.an16.tasty.model.Trivia
 import com.tms.an16.tasty.network.NetworkResult
@@ -26,7 +27,7 @@ class TriviaViewModel @Inject constructor(
 
     val readTrivia: Flow<List<TriviaEntity>> = repository.local.readTrivia()
 
-    private val isNetworkConnected = MutableLiveData<Boolean>()
+    private val isNetworkConnected = MutableLiveData<NetworkState>()
 
     init {
         viewModelScope.launch {
@@ -39,12 +40,12 @@ class TriviaViewModel @Inject constructor(
     fun getTrivia(apiKey: String) {
         viewModelScope.launch {
             triviaResponse.value = NetworkResult.Loading()
-            if (isNetworkConnected.value == true) {
+            if (isNetworkConnected.value == NetworkState.CONNECTED) {
                 try {
                     val response = repository.remote.getTrivia(apiKey)
                     triviaResponse.value = handleTriviaResponse(response)
 
-                    val trivia = triviaResponse.value!!.data
+                    val trivia = triviaResponse.value?.data
                     if (trivia != null) {
                         offlineCacheTrivia(trivia)
                     }

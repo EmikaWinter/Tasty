@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tms.an16.tasty.R
+import com.tms.an16.tasty.controller.NetworkState
 import com.tms.an16.tasty.databinding.FragmentRecipesBinding
 import com.tms.an16.tasty.model.Result
 import com.tms.an16.tasty.network.NetworkResult
@@ -56,8 +57,6 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
         isNetworkConnected()
 
-        readDatabase()
-
         val menu: MenuHost = requireActivity()
         menu.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -77,22 +76,35 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private fun isNetworkConnected() {
         viewModel.isNetworkConnected.observe(viewLifecycleOwner) {
-            if (it) {
-                binding?.choiceActionButton?.setOnClickListener {
-                    findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
+            readDatabase()
+
+            when (it) {
+                NetworkState.UNKNOWN -> return@observe
+
+                NetworkState.CONNECTED -> {
+                    binding?.choiceActionButton?.setOnClickListener {
+                        findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
+                    }
+
+                    if (viewModel.backOnline) {
+                        readDatabase()
+
+                        hideNoInternetError()
+                        viewModel.showNetworkStatus(requireContext())
+                    }
                 }
 
-                if (viewModel.backOnline) {
-                    requestApiData()
-                    hideNoInternetError()
+                NetworkState.DISCONNECTED -> {
+                    loadDataFromCache()
+
                     viewModel.showNetworkStatus(requireContext())
+                    binding?.choiceActionButton?.setOnClickListener {
+                        viewModel.showNetworkStatus(requireContext())
+                    }
                 }
 
-            } else {
-                viewModel.showNetworkStatus(requireContext())
-
-                binding?.choiceActionButton?.setOnClickListener {
-                    viewModel.showNetworkStatus(requireContext())
+                else -> {
+//                    do nothing
                 }
             }
         }
@@ -116,7 +128,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                     setList(database.first().foodRecipe.results)
                     hideShimmerEffect()
                 } else {
-                    if (!dataRequested) {
+                    if (!dataRequested && viewModel.isNetworkConnected.value == NetworkState.CONNECTED) {
                         requestApiData()
                         dataRequested = true
                     }
