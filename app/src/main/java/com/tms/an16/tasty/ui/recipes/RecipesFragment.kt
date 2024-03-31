@@ -12,10 +12,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -23,11 +22,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.databinding.FragmentRecipesBinding
 import com.tms.an16.tasty.model.Result
+import com.tms.an16.tasty.network.NetworkResult
 import com.tms.an16.tasty.ui.recipes.adapter.RecipesAdapter
-import com.tms.an16.tasty.util.NetworkListener
-import com.tms.an16.tasty.util.NetworkResult
-import com.tms.an16.tasty.util.observeOnce
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -35,9 +33,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private var binding: FragmentRecipesBinding? = null
 
-    private lateinit var viewModel: RecipesViewModel
-
-    private lateinit var networkListener: NetworkListener
+    private val viewModel: RecipesViewModel by activityViewModels()
 
     private val args by navArgs<RecipesFragmentArgs>()
 
@@ -56,31 +52,11 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(requireActivity())[RecipesViewModel::class.java]
+        checkIsBackOnline()
 
-        viewModel.readBackOnline.observe(viewLifecycleOwner) {
-            viewModel.backOnline = it
-        }
+        isNetworkConnected()
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(state = Lifecycle.State.STARTED) {
-                networkListener = NetworkListener()
-                networkListener.checkNetworkAvailability(requireContext())
-                    .collect { status ->
-                        viewModel.networkStatus = status
-                        viewModel.showNetworkStatus(requireContext())
-                        readDatabase()
-                    }
-            }
-        }
-
-        binding?.choiceActionButton?.setOnClickListener {
-            if (viewModel.networkStatus) {
-                findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
-            } else {
-                viewModel.showNetworkStatus(requireContext())
-            }
-        }
+        readDatabase()
 
         val menu: MenuHost = requireActivity()
         menu.addMenuProvider(object : MenuProvider {
@@ -99,9 +75,40 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
+    private fun isNetworkConnected() {
+        viewModel.isNetworkConnected.observe(viewLifecycleOwner) {
+            if (it) {
+                binding?.choiceActionButton?.setOnClickListener {
+                    findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
+                }
+
+                if (viewModel.backOnline) {
+                    requestApiData()
+                    hideNoInternetError()
+                    viewModel.showNetworkStatus(requireContext())
+                }
+
+            } else {
+                viewModel.showNetworkStatus(requireContext())
+
+                binding?.choiceActionButton?.setOnClickListener {
+                    viewModel.showNetworkStatus(requireContext())
+                }
+            }
+        }
+    }
+
+    private fun checkIsBackOnline() {
+        lifecycleScope.launch {
+            viewModel.readBackOnline.collectLatest {
+                viewModel.backOnline = it
+            }
+        }
+    }
+
     private fun readDatabase() {
         lifecycleScope.launch {
-            viewModel.readRecipes.observeOnce(viewLifecycleOwner) { database ->
+            viewModel.readRecipes.collectLatest { database ->
                 if (database.isNotEmpty()
                     && !args.backFromBottomSheet
                     || database.isNotEmpty() && dataRequested
@@ -173,19 +180,29 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun loadDataFromCache() {
-        viewModel.readRecipes.observe(viewLifecycleOwner) { database ->
-            if (!database.isNullOrEmpty()) {
-                setList(database.first().foodRecipe.results)
-            } else {
-                setNoInternetError()
+        lifecycleScope.launch {
+            viewModel.readRecipes.collectLatest { database ->
+                if (database.isNotEmpty()) {
+                    setList(database.first().foodRecipe.results)
+                } else {
+                    setNoInternetError()
+                }
             }
         }
     }
 
     private fun setNoInternetError() {
         binding?.run {
-            errorImage.visibility = View.VISIBLE
-            errorText.visibility = View.VISIBLE
+            hideShimmerEffect()
+            errorImageView.visibility = View.VISIBLE
+            errorTextView.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideNoInternetError() {
+        binding?.run {
+            errorImageView.visibility = View.INVISIBLE
+            errorTextView.visibility = View.INVISIBLE
         }
     }
 
@@ -218,9 +235,8 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
         binding?.recyclerView?.visibility = View.VISIBLE
     }
 
-
     override fun onQueryTextSubmit(query: String?): Boolean {
-        if (query != null) {
+        if (!query.isNullOrEmpty()) {
             searchApiData(query)
         }
         return true

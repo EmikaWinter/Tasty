@@ -1,6 +1,8 @@
 package com.tms.an16.tasty.ui.details
 
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -12,6 +14,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.databinding.ActivityDetailsBinding
 import com.tms.an16.tasty.model.Result
+import com.tms.an16.tasty.receiver.NetworkReceiver
 import com.tms.an16.tasty.ui.details.adapter.PagerAdapter
 import com.tms.an16.tasty.ui.details.ingredients.IngredientsFragment
 import com.tms.an16.tasty.ui.details.instructions.InstructionsFragment
@@ -26,6 +29,8 @@ class DetailsActivity : AppCompatActivity() {
     private var binding: ActivityDetailsBinding? = null
 
     private val args by navArgs<DetailsActivityArgs>()
+
+    private val networkReceiver = NetworkReceiver()
 
     private var url = "no data"
     private var title = "no data"
@@ -101,5 +106,19 @@ class DetailsActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(
+            networkReceiver, IntentFilter(
+                ConnectivityManager.CONNECTIVITY_ACTION
+            )
+        )
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(networkReceiver)
     }
 }

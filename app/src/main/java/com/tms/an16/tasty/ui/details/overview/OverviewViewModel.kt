@@ -1,13 +1,12 @@
 package com.tms.an16.tasty.ui.details.overview
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.tms.an16.tasty.database.entity.FavoritesEntity
 import com.tms.an16.tasty.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,8 +15,8 @@ class OverviewViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
 
-    val readFavoriteRecipes: LiveData<List<FavoritesEntity>> =
-        repository.local.readFavoriteRecipes().asLiveData()
+    val readFavoriteRecipes: Flow<List<FavoritesEntity>> =
+        repository.local.readFavoriteRecipes()
 
     fun insertFavoriteRecipe(favoritesEntity: FavoritesEntity) {
         viewModelScope.launch(Dispatchers.IO) {

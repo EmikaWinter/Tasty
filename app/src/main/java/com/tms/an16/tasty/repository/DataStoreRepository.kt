@@ -1,8 +1,6 @@
 package com.tms.an16.tasty.repository
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -11,6 +9,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.tms.an16.tasty.util.Constants
 import com.tms.an16.tasty.util.Constants.Companion.DEFAULT_DIET_TYPE
 import com.tms.an16.tasty.util.Constants.Companion.DEFAULT_MEAL_TYPE
 import com.tms.an16.tasty.util.Constants.Companion.PREFERENCES_BACK_ONLINE
@@ -56,7 +55,6 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
         }
     }
 
-
     val readMealAndDietType: Flow<MealAndDietType> = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
@@ -97,19 +95,43 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
         }
     }
 
-    fun hasInternetConnection(): Boolean {
-        val connectivityManager = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
-        val activeNetwork = connectivityManager.activeNetwork ?: return false
-        val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-        return when {
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            else -> false
-        }
+    fun applyQueries(): HashMap<String, String> {
+        val queries: HashMap<String, String> = HashMap()
+
+        queries[Constants.QUERY_NUMBER] = Constants.DEFAULT_RECIPES_NUMBER
+        queries[Constants.QUERY_API_KEY] = Constants.API_KEY
+        queries[Constants.QUERY_ADD_RECIPE_INFORMATION] = "true"
+        queries[Constants.QUERY_FILL_INGREDIENTS] = "true"
+
+        queries[Constants.QUERY_TYPE] = DEFAULT_MEAL_TYPE
+        queries[Constants.QUERY_DIET] = DEFAULT_DIET_TYPE
+        return queries
     }
+
+    fun applySearchQuery(searchQuery: String): HashMap<String, String> {
+        val queries: HashMap<String, String> = HashMap()
+        queries[Constants.QUERY_SEARCH] = searchQuery
+        queries[Constants.QUERY_NUMBER] = Constants.DEFAULT_RECIPES_NUMBER
+        queries[Constants.QUERY_API_KEY] = Constants.API_KEY
+        queries[Constants.QUERY_ADD_RECIPE_INFORMATION] = "true"
+        queries[Constants.QUERY_FILL_INGREDIENTS] = "true"
+        return queries
+    }
+
+
+//    fun hasInternetConnection(): Boolean {
+//        val connectivityManager = context.getSystemService(
+//            Context.CONNECTIVITY_SERVICE
+//        ) as ConnectivityManager
+//        val activeNetwork = connectivityManager.activeNetwork ?: return false
+//        val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+//        return when {
+//            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+//            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+//            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+//            else -> false
+//        }
+//    }
 }
 
 data class MealAndDietType(
