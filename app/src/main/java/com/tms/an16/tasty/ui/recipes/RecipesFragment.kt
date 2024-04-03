@@ -224,7 +224,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = RecipesAdapter { result ->
                     findNavController().navigate(
-                        RecipesFragmentDirections.actionRecipesFragmentToDetailsActivity(
+                        RecipesFragmentDirections.actionRecipesFragmentToDetailsFragment(
                             result
                         )
                     )

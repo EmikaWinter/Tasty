@@ -81,7 +81,7 @@ class FavoriteRecipesFragment : Fragment() {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = FavoriteRecipesAdapter(onClick = { favorite ->
                     findNavController().navigate(
-                        FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToDetailsActivity(
+                        FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToDetailsFragment(
                             favorite.result
                         )
                     )
