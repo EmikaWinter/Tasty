@@ -12,7 +12,7 @@ class Constants {
 //        e957d36791794404b092c31717baf0b8
 
         const val RECIPE_RESULT_KEY = "recipeBundle"
-
+        
         // ROOM Database
         const val DATABASE_NAME = "recipes_database"
         const val RECIPES_TABLE = "recipes_table"

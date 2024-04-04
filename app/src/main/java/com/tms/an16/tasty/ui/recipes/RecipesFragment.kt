@@ -40,7 +40,6 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private var dataRequested = false
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -102,6 +101,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                         viewModel.showNetworkStatus(requireContext())
                     }
                 }
+
                 else -> {
 //                    do nothing
                 }
@@ -227,7 +227,6 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                             result
                         )
                     )
-
                 }
             }
             (adapter as? RecipesAdapter)?.submitList(list)
