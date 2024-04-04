@@ -5,6 +5,8 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("androidx.navigation.safeargs")
     id("kotlin-parcelize")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -70,17 +72,12 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
-//    non-null binding 
-//    implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.9")
-
     implementation("io.coil-kt:coil:2.6.0")
     implementation("com.github.bumptech.glide:glide:4.15.1")
 
-    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
-    // Because RxAndroid releases are few and far between, it is recommended you also
-    // explicitly depend on RxJava's latest version for bug fixes and new features.
-    // (see https://github.com/ReactiveX/RxJava/releases for latest 3.x.x version)
-    implementation("io.reactivex.rxjava3:rxjava:3.1.5")
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-crashlytics")
 
     implementation("com.google.code.gson:gson:2.10.1")
 

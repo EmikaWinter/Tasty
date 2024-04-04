@@ -29,7 +29,6 @@ class RecipesBottomSheet : BottomSheetDialogFragment() {
     private var dietTypeChip = DEFAULT_DIET_TYPE
     private var dietTypeChipId = 0
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

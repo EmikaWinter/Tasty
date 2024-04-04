@@ -102,7 +102,6 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                         viewModel.showNetworkStatus(requireContext())
                     }
                 }
-
                 else -> {
 //                    do nothing
                 }
