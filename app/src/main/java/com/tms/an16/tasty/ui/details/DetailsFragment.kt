@@ -16,7 +16,6 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.tabs.TabLayoutMediator
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.databinding.FragmentDetailsBinding
-import com.tms.an16.tasty.model.Result
 import com.tms.an16.tasty.ui.details.adapter.PagerAdapter
 import com.tms.an16.tasty.ui.details.ingredients.IngredientsFragment
 import com.tms.an16.tasty.ui.details.instructions.InstructionsFragment
@@ -92,10 +91,10 @@ class DetailsFragment : Fragment() {
         titles.add("Instructions")
 
         val resultBundle = Bundle()
-        resultBundle.putParcelable(Constants.RECIPE_RESULT_KEY, args.result)
-        val result: Result? = resultBundle.getParcelable(Constants.RECIPE_RESULT_KEY)
-        url = result?.sourceUrl.toString()
-        title = result?.title.toString()
+        resultBundle.putInt(Constants.RECIPE_RESULT_KEY, args.idRecipe)
+//        val recipe: RecipeEntity = resultBundle.getParcelable(Constants.RECIPE_RESULT_KEY)
+//        url = recipe?.sourceUrl.toString()
+//        title = recipe?.title.toString()
 
         val pagerAdapter = PagerAdapter(
             resultBundle,

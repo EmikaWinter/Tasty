@@ -1,14 +1,15 @@
 package com.tms.an16.tasty.ui.recipes
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tms.an16.tasty.controller.NetworkController
 import com.tms.an16.tasty.controller.NetworkState
-import com.tms.an16.tasty.database.entity.RecipesEntity
-import com.tms.an16.tasty.model.FoodRecipe
+import com.tms.an16.tasty.database.entity.RecipeEntity
+import com.tms.an16.tasty.model.FoodRecipes
 import com.tms.an16.tasty.network.NetworkResult
 import com.tms.an16.tasty.repository.DataStoreRepository
 import com.tms.an16.tasty.repository.MealAndDietType
@@ -22,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -32,9 +34,10 @@ class RecipesViewModel @Inject constructor(
     networkController: NetworkController
 ) : ViewModel() {
 
-    var recipesResponse = MutableLiveData<NetworkResult<FoodRecipe>>()
+    var recipesResponse = MutableLiveData<NetworkResult<FoodRecipes>>()
 
-    val readRecipes: Flow<List<RecipesEntity>> = repository.local.readRecipes()
+    val recipes = MutableLiveData<List<RecipeEntity>>()
+//        repository.local.readRecipes()
 
     val isNetworkConnected = MutableLiveData<NetworkState>()
 
@@ -44,7 +47,7 @@ class RecipesViewModel @Inject constructor(
 
     val readBackOnline: Flow<Boolean> = dataStoreRepository.readBackOnline
 
-    var searchedRecipesResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
+    var searchedRecipesResponse: MutableLiveData<NetworkResult<FoodRecipes>> = MutableLiveData()
 
     private lateinit var mealAndDiet: MealAndDietType
 
@@ -52,6 +55,16 @@ class RecipesViewModel @Inject constructor(
         viewModelScope.launch {
             networkController.isNetworkConnected.collectLatest {
                 isNetworkConnected.value = it
+            }
+        }
+    }
+
+    fun readRecipes(){
+        viewModelScope.launch {
+            recipes.value = withContext(Dispatchers.IO) {
+                Log.e(";kjk", "${repository.local.readRecipes().size}")
+
+                repository.local.readRecipes()
             }
         }
     }
@@ -155,13 +168,14 @@ class RecipesViewModel @Inject constructor(
         }
     }
 
-    private fun offlineCacheRecipes(foodRecipe: FoodRecipe) {
+    private fun offlineCacheRecipes(foodRecipes: FoodRecipes) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.local.insertRecipe(RecipesEntity(foodRecipe))
+            repository.local.deleteAllRecipes()
+            repository.local.insertRecipes(foodRecipes.recipes)
         }
     }
 
-    private fun handleFoodRecipesResponse(response: Response<FoodRecipe>): NetworkResult<FoodRecipe> {
+    private fun handleFoodRecipesResponse(response: Response<FoodRecipes>): NetworkResult<FoodRecipes> {
         return when {
             response.message().toString().contains("timeout") -> {
                 NetworkResult.Error("Timeout")
@@ -171,7 +185,7 @@ class RecipesViewModel @Inject constructor(
                 NetworkResult.Error("API Key Limited.")
             }
 
-            response.body()?.results.isNullOrEmpty() -> {
+            response.body()?.recipes.isNullOrEmpty() -> {
                 NetworkResult.Error("Recipes not found.")
             }
 

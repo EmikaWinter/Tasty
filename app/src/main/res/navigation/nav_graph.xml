@@ -53,8 +53,9 @@
         android:name="com.tms.an16.tasty.ui.details.DetailsFragment"
         android:label="Details"
         tools:layout="@layout/fragment_details">
+
         <argument
-            android:name="result"
-            app:argType="com.tms.an16.tasty.model.Result" />
+            android:name="id_recipe"
+            app:argType="integer" />
     </fragment>
 </navigation>

@@ -21,8 +21,8 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.controller.NetworkState
+import com.tms.an16.tasty.database.entity.RecipeEntity
 import com.tms.an16.tasty.databinding.FragmentRecipesBinding
-import com.tms.an16.tasty.model.Result
 import com.tms.an16.tasty.network.NetworkResult
 import com.tms.an16.tasty.ui.recipes.adapter.RecipesAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,6 +45,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel.readRecipes()
         binding = FragmentRecipesBinding.inflate(inflater)
         return binding?.root
     }
@@ -118,21 +119,20 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun readDatabase() {
-        lifecycleScope.launch {
-            viewModel.readRecipes.collectLatest { database ->
-                if (database.isNotEmpty()
-                    && !args.backFromBottomSheet
-                    || database.isNotEmpty() && dataRequested
-                ) {
-                    setList(database.first().foodRecipe.results)
-                    hideShimmerEffect()
-                } else {
-                    if (!dataRequested && viewModel.isNetworkConnected.value == NetworkState.CONNECTED) {
-                        requestApiData()
-                        dataRequested = true
-                    }
+        viewModel.recipes.observe(viewLifecycleOwner) { database ->
+            if (database.isNotEmpty()
+                && !args.backFromBottomSheet
+                || database.isNotEmpty() && dataRequested
+            ) {
+                setList(database)
+                hideShimmerEffect()
+            } else {
+                if (!dataRequested && viewModel.isNetworkConnected.value == NetworkState.CONNECTED) {
+                    requestApiData()
+                    dataRequested = true
                 }
             }
+
         }
     }
 
@@ -142,7 +142,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
             when (response) {
                 is NetworkResult.Success -> {
                     hideShimmerEffect()
-                    response.data?.results?.let { setList(it) }
+                    response.data?.recipes?.let { setList(it) }
                     viewModel.saveMealAndDietType()
                 }
 
@@ -170,7 +170,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
             when (response) {
                 is NetworkResult.Success -> {
                     hideShimmerEffect()
-                    response.data?.results?.let { setList(it) }
+                    response.data?.recipes?.let { setList(it) }
                 }
 
                 is NetworkResult.Error -> {
@@ -191,13 +191,11 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun loadDataFromCache() {
-        lifecycleScope.launch {
-            viewModel.readRecipes.collectLatest { database ->
-                if (database.isNotEmpty()) {
-                    setList(database.first().foodRecipe.results)
-                } else {
-                    setNoInternetError()
-                }
+        viewModel.recipes.observe(viewLifecycleOwner) { database ->
+            if (database.isNotEmpty()) {
+                setList(database)
+            } else {
+                setNoInternetError()
             }
         }
     }
@@ -217,14 +215,14 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
         }
     }
 
-    private fun setList(list: List<Result>) {
+    private fun setList(list: List<RecipeEntity>) {
         binding?.recyclerView?.run {
             if (adapter == null) {
                 layoutManager = LinearLayoutManager(requireContext())
-                adapter = RecipesAdapter { result ->
+                adapter = RecipesAdapter { recipe ->
                     findNavController().navigate(
                         RecipesFragmentDirections.actionRecipesFragmentToDetailsFragment(
-                            result
+                            recipe.recipeId
                         )
                     )
                 }

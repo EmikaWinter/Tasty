@@ -13,7 +13,6 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -23,8 +22,6 @@ import com.tms.an16.tasty.database.entity.FavoritesEntity
 import com.tms.an16.tasty.databinding.FragmentFavoriteRecipesBinding
 import com.tms.an16.tasty.ui.favorite.adapter.FavoriteRecipesAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FavoriteRecipesFragment : Fragment() {
@@ -45,11 +42,11 @@ class FavoriteRecipesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch {
-            viewModel.readFavoriteRecipes.collectLatest {
-                setList(it)
-                setNoDataError(it)
-            }
+
+        viewModel.favoriteRecipes.observe(viewLifecycleOwner) {
+            setList(it)
+            setNoDataError(it)
+
         }
 
         val menuHost: MenuHost = requireActivity()
@@ -82,7 +79,7 @@ class FavoriteRecipesFragment : Fragment() {
                 adapter = FavoriteRecipesAdapter(onClick = { favorite ->
                     findNavController().navigate(
                         FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToDetailsFragment(
-                            favorite.result
+                            favorite.id
                         )
                     )
                 }, onLongClick = { favorite ->

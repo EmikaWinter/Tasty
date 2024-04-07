@@ -16,15 +16,13 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.database.entity.FavoritesEntity
+import com.tms.an16.tasty.database.entity.RecipeEntity
 import com.tms.an16.tasty.databinding.FragmentOverviewBinding
-import com.tms.an16.tasty.model.Result
 import com.tms.an16.tasty.util.Constants.Companion.RECIPE_RESULT_KEY
 import com.tms.an16.tasty.util.parseHtml
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class OverviewFragment : Fragment() {
 
@@ -47,71 +45,71 @@ class OverviewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val args = arguments
-        val recipeResult = args?.getParcelable<Result>(RECIPE_RESULT_KEY)
+//        val recipeResult = args?.getParcelable<RecipeEntity>(RECIPE_RESULT_KEY)
 
-        val favoritesEntity =
-            FavoritesEntity(
-                0,
-                recipeResult as Result
-            )
+        val recipeId = args?.getInt(RECIPE_RESULT_KEY) ?: 0
 
-        binding?.run {
-            mainImageView.run {
-                Glide.with(requireContext()).load(recipeResult.image).into(this)
-            }
-            titleTextView.text = recipeResult.title
-            likesTextView.text = recipeResult.aggregateLikes.toString()
-            timeTextView.text = recipeResult.readyInMinutes.toString()
-
-            parseHtml(this.summaryTextView, recipeResult.summary)
-
-            updateColors(recipeResult.vegetarian, this.vegetarianTextView)
-            updateColors(recipeResult.vegan, this.veganTextView)
-            updateColors(recipeResult.cheap, this.cheapTextView)
-            updateColors(recipeResult.dairyFree, this.dairyTextView)
-            updateColors(recipeResult.glutenFree, this.glutenFreeTextView)
-            updateColors(recipeResult.veryHealthy, this.healthyTextView)
-        }
-
-        checkSavedRecipes(recipeResult.recipeId)
-
-        binding?.saveToFavImageView?.setOnClickListener {
-
-            if (!recipeSaved) {
-                saveToFavorites(favoritesEntity)
-            } else {
-                deleteFromFavorites(recipeResult)
-            }
-        }
-    }
-
-    private fun checkSavedRecipes(id: Int) {
         lifecycleScope.launch {
-            viewModel.readFavoriteRecipes.collectLatest { favoritesEntity ->
-                try {
-                    for (savedRecipe in favoritesEntity) {
-                        if (savedRecipe.result.recipeId == id) {
-                            setColorToSaveToFavImage(R.color.yellow)
-                            savedRecipeId = savedRecipe.id
-                            recipeSaved = true
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.d("OverviewFragment", e.message.toString())
+            val recipe = viewModel.getById(recipeId)
+
+
+            binding?.run {
+                mainImageView.run {
+                    Glide.with(requireContext()).load(recipe.image).into(this)
+                }
+                titleTextView.text = recipe.title
+                likesTextView.text = recipe.aggregateLikes.toString()
+                timeTextView.text = recipe.readyInMinutes.toString()
+
+                parseHtml(this.summaryTextView, recipe.summary)
+
+                updateColors(recipe.vegetarian, this.vegetarianTextView)
+                updateColors(recipe.vegan, this.veganTextView)
+                updateColors(recipe.cheap, this.cheapTextView)
+                updateColors(recipe.dairyFree, this.dairyTextView)
+                updateColors(recipe.glutenFree, this.glutenFreeTextView)
+                updateColors(recipe.veryHealthy, this.healthyTextView)
+            }
+
+            checkSavedRecipes(recipeId)
+
+            binding?.saveToFavImageView?.setOnClickListener {
+
+                if (!recipeSaved) {
+                    saveToFavorites(recipe)
+                } else {
+                    deleteFromFavorites(recipe)
                 }
             }
         }
     }
 
-    private fun saveToFavorites(favoritesEntity: FavoritesEntity) {
+    private fun checkSavedRecipes(id: Int) {
+        viewModel.favoriteRecipes.observe(viewLifecycleOwner) { favoritesEntity ->
+            try {
+                for (savedRecipe in favoritesEntity) {
+                    if (savedRecipe.recipeEntity.recipeId == id) {
+                        setColorToSaveToFavImage(R.color.yellow)
+                        savedRecipeId = savedRecipe.id
+                        recipeSaved = true
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("OverviewFragment", e.message.toString())
+            }
+        }
+    }
+
+    private fun saveToFavorites(recipeEntity: RecipeEntity) {
+        val favoritesEntity = FavoritesEntity(recipeEntity)
         viewModel.insertFavoriteRecipe(favoritesEntity)
         setColorToSaveToFavImage(R.color.yellow)
         showSnackBar("Recipe saved")
         recipeSaved = true
     }
 
-    private fun deleteFromFavorites(recipeResult: Result) {
-        val favoritesEntity = FavoritesEntity(savedRecipeId, recipeResult)
+    private fun deleteFromFavorites(recipeEntity: RecipeEntity) {
+        val favoritesEntity = FavoritesEntity(recipeEntity)
         viewModel.deleteFavoriteRecipe(favoritesEntity)
         setColorToSaveToFavImage(R.color.white)
         showSnackBar("Removed from Favorites")

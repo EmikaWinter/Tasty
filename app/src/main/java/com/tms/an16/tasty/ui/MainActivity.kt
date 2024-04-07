@@ -33,7 +33,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
-        binding?.bottomNavigation?.visibility = View.VISIBLE
+        registerReceiver(
+            networkReceiver, IntentFilter(
+                ConnectivityManager.CONNECTIVITY_ACTION
+            )
+        )
+
+//        binding?.bottomNavigation?.visibility = View.VISIBLE
 
         navController = findNavController(R.id.nav_host_fragment)
         val appBarConfiguration = AppBarConfiguration(
@@ -70,17 +76,17 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    override fun onResume() {
-        super.onResume()
-        registerReceiver(
-            networkReceiver, IntentFilter(
-                ConnectivityManager.CONNECTIVITY_ACTION
-            )
-        )
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        registerReceiver(
+//            networkReceiver, IntentFilter(
+//                ConnectivityManager.CONNECTIVITY_ACTION
+//            )
+//        )
+//    }
 
-    override fun onStop() {
-        super.onStop()
-        unregisterReceiver(networkReceiver)
-    }
+//    override fun onStop() {
+//        super.onStop()
+//        unregisterReceiver(networkReceiver)
+//    }
 }
