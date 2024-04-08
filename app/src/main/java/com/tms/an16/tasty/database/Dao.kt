@@ -25,7 +25,7 @@ interface Dao {
     @Query("SELECT * FROM recipes_table WHERE recipeId == :id")
     suspend fun getRecipeById(id: Int): RecipeEntity
 
-    @Query("SELECT * FROM recipes_table")
+    @Query("SELECT * FROM recipes_table ORDER BY title ASC")
     fun readRecipes(): Flow<List<RecipeEntity>>
 
     @Query("SELECT * FROM favorite_recipes_table")
