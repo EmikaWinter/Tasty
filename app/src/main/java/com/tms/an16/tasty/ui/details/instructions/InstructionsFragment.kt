@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.tms.an16.tasty.databinding.FragmentInstructionsBinding
@@ -38,7 +40,12 @@ class InstructionsFragment : Fragment() {
 
         viewModel.selectedRecipe.observe(viewLifecycleOwner) { recipe ->
             binding?.run {
-                instructionsWebView.webViewClient = object : WebViewClient() {}
+                instructionsWebView.webViewClient = object : WebViewClient() {
+                    override fun onPageCommitVisible(view: WebView?, url: String?) {
+                        super.onPageCommitVisible(view, url)
+                        progressBar.isVisible = false
+                    }
+                }
                 instructionsWebView.settings.javaScriptEnabled = true
                 instructionsWebView.loadUrl(recipe.sourceUrl)
             }
