@@ -1,4 +1,4 @@
-package com.tms.an16.tasty.ui.details
+package com.tms.an16.tasty.ui.details.ingredients
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailsViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
+class IngredientsViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
 
     val selectedRecipe = MutableLiveData<RecipeEntity>()
 

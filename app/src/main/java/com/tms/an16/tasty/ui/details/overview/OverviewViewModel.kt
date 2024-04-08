@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.tms.an16.tasty.database.entity.FavoritesEntity
 import com.tms.an16.tasty.database.entity.RecipeEntity
 import com.tms.an16.tasty.repository.Repository
+import com.tms.an16.tasty.util.toRecipeEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -19,19 +20,13 @@ class OverviewViewModel @Inject constructor(
 
     val readFavoriteRecipes: Flow<List<FavoritesEntity>> = repository.local.readFavoriteRecipes()
 
-    val recipeById = MutableLiveData<RecipeEntity>()
+    val selectedRecipe = MutableLiveData<RecipeEntity>()
 
-
-    fun loadRecipeById(id: Int) {
+    fun loadSelectedRecipeById(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            recipeById.postValue(repository.local.getRecipeById(id))
+            selectedRecipe.postValue(repository.local.getSelectedRecipeById(id).toRecipeEntity())
         }
     }
-
-//    suspend fun getSearchRecipeById(id: Int): RecipeEntity {
-//
-//    }
-
 
     fun insertFavoriteRecipe(favoritesEntity: FavoritesEntity) {
         viewModelScope.launch(Dispatchers.IO) {

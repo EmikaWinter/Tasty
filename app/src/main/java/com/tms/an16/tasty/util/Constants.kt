@@ -17,6 +17,7 @@ class Constants {
         const val DATABASE_NAME = "recipes_database"
         const val RECIPES_TABLE = "recipes_table"
         const val FAVORITE_RECIPES_TABLE = "favorite_recipes_table"
+        const val SELECTED_RECIPES_TABLE = "selected_recipes_table"
         const val TRIVIA_TABLE = "trivia_table"
 
         // API Query Keys

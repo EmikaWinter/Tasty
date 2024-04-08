@@ -50,9 +50,9 @@ class OverviewFragment : Fragment() {
 
         val recipeId = args?.getInt(RECIPE_RESULT_KEY) ?: 0
 
-        viewModel.loadRecipeById(recipeId)
+        viewModel.loadSelectedRecipeById(recipeId)
 
-        viewModel.recipeById.observe(viewLifecycleOwner) { recipe ->
+        viewModel.selectedRecipe.observe(viewLifecycleOwner) { recipe ->
             binding?.run {
 //                mainImageView.run {
 //                    Glide.with(requireContext()).load(recipe.image).into(this)
@@ -85,7 +85,6 @@ class OverviewFragment : Fragment() {
                 }
             }
         }
-
     }
 
     private fun checkSavedRecipes(id: Int) {

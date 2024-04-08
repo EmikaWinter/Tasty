@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.tabs.TabLayoutMediator
@@ -23,11 +24,12 @@ import com.tms.an16.tasty.ui.details.overview.OverviewFragment
 import com.tms.an16.tasty.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
-@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class DetailsFragment : Fragment() {
 
     private var binding: FragmentDetailsBinding? = null
+
+    private val viewModel: DetailsViewModel by viewModels()
 
     private val args by navArgs<DetailsFragmentArgs>()
 
@@ -92,9 +94,13 @@ class DetailsFragment : Fragment() {
 
         val resultBundle = Bundle()
         resultBundle.putInt(Constants.RECIPE_RESULT_KEY, args.idRecipe)
-//        val recipe: RecipeEntity = resultBundle.getParcelable(Constants.RECIPE_RESULT_KEY)
-//        url = recipe?.sourceUrl.toString()
-//        title = recipe?.title.toString()
+
+        viewModel.loadSelectedRecipeById(args.idRecipe)
+
+        viewModel.selectedRecipe.observe(viewLifecycleOwner) { recipe ->
+            url = recipe?.sourceUrl.toString()
+            title = recipe?.title.toString()
+        }
 
         val pagerAdapter = PagerAdapter(
             resultBundle,

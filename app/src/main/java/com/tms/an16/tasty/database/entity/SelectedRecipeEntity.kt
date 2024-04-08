@@ -4,10 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import com.tms.an16.tasty.model.ExtendedIngredient
-import com.tms.an16.tasty.util.Constants.Companion.RECIPES_TABLE
+import com.tms.an16.tasty.util.Constants.Companion.SELECTED_RECIPES_TABLE
 
-@Entity(tableName = RECIPES_TABLE)
-data class RecipeEntity(
+@Entity(tableName = SELECTED_RECIPES_TABLE)
+data class SelectedRecipeEntity(
     @PrimaryKey
     @SerializedName("id")
     val recipeId: Int,

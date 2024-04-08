@@ -25,6 +25,7 @@ import com.tms.an16.tasty.database.entity.RecipeEntity
 import com.tms.an16.tasty.databinding.FragmentRecipesBinding
 import com.tms.an16.tasty.network.NetworkResult
 import com.tms.an16.tasty.ui.recipes.adapter.RecipesAdapter
+import com.tms.an16.tasty.util.toSelectedRecipeEntity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -169,6 +170,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                 is NetworkResult.Success -> {
                     hideShimmerEffect()
                     response.data?.recipes?.let { setList(it) }
+
                 }
 
                 is NetworkResult.Error -> {
@@ -219,6 +221,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
             if (adapter == null) {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = RecipesAdapter { recipe ->
+                    viewModel.saveSelectedRecipe(recipe.toSelectedRecipeEntity())
                     findNavController().navigate(
                         RecipesFragmentDirections.actionRecipesFragmentToDetailsFragment(
                             recipe.recipeId
