@@ -1,7 +1,8 @@
 package com.tms.an16.tasty.ui.recipes.adapter
 
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import coil.load
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.database.entity.RecipeEntity
 import com.tms.an16.tasty.databinding.ItemRecipesBinding
@@ -15,13 +16,14 @@ class RecipesViewHolder(private val binding: ItemRecipesBinding) : ViewHolder(bi
         onClick: (recipe: RecipeEntity) -> Unit
     ) {
         binding.run {
-//            recipeImage.run {
-//                Glide.with(context).load(recipe.image).error(R.drawable.ic_empty_image).into(this)
-//            }
-            recipeImage.load(recipe.image) {
-                crossfade(600)
-                error(R.drawable.ic_empty_image)
+            recipeImage.run {
+                Glide.with(context)
+                    .load(recipe.image)
+                    .transition(DrawableTransitionOptions.withCrossFade(500))
+                    .error(R.drawable.ic_empty_image)
+                    .into(this)
             }
+
             titleTextView.text = recipe.title
             favTextView.text = recipe.aggregateLikes.toString()
             timeTextView.text = recipe.readyInMinutes.toString()

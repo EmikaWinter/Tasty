@@ -15,7 +15,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.tms.an16.tasty.R
@@ -79,7 +78,6 @@ class FavoriteRecipesFragment : Fragment() {
     private fun setList(list: List<FavoritesEntity>) {
         binding?.recyclerView?.run {
             if (adapter == null) {
-                layoutManager = LinearLayoutManager(requireContext())
                 adapter = FavoriteRecipesAdapter(onClick = { favorite ->
                     findNavController().navigate(
                         FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToDetailsFragment(

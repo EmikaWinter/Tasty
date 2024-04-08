@@ -1,6 +1,7 @@
 package com.tms.an16.tasty.ui.recipes
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -18,7 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.controller.NetworkState
 import com.tms.an16.tasty.database.entity.RecipeEntity
@@ -52,6 +53,9 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.e("adapter", "null")
+
 
         checkIsBackOnline()
 
@@ -98,6 +102,12 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                     loadDataFromCache()
 
                     viewModel.showNetworkStatus(requireContext())
+//                    Snackbar.make(
+//                        requireView(),
+//                        "No Internet Connection.",
+//                        Snackbar.LENGTH_INDEFINITE
+//                    ).show()
+
                     binding?.choiceActionButton?.setOnClickListener {
                         viewModel.showNetworkStatus(requireContext())
                     }
@@ -170,7 +180,6 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                 is NetworkResult.Success -> {
                     hideShimmerEffect()
                     response.data?.recipes?.let { setList(it) }
-
                 }
 
                 is NetworkResult.Error -> {
@@ -180,6 +189,11 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                         requireContext(),
                         response.message.toString(),
                         Toast.LENGTH_SHORT
+                    ).show()
+                    Snackbar.make(
+                        requireView(),
+                        response.message.toString(),
+                        Snackbar.LENGTH_INDEFINITE
                     ).show()
                 }
 
@@ -219,7 +233,6 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     private fun setList(list: List<RecipeEntity>) {
         binding?.recyclerView?.run {
             if (adapter == null) {
-                layoutManager = LinearLayoutManager(requireContext())
                 adapter = RecipesAdapter { recipe ->
                     viewModel.saveSelectedRecipe(recipe.toSelectedRecipeEntity())
                     findNavController().navigate(
