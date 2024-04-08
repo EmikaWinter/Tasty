@@ -118,19 +118,17 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun readDatabase() {
-        lifecycleScope.launch {
-            viewModel.readRecipes().collectLatest { database ->
-                if (database.isNotEmpty()
-                    && !args.backFromBottomSheet
-                    || database.isNotEmpty() && dataRequested
-                ) {
-                    setList(database)
-                    hideShimmerEffect()
-                } else {
-                    if (!dataRequested && viewModel.isNetworkConnected.value == NetworkState.CONNECTED) {
-                        requestApiData()
-                        dataRequested = true
-                    }
+        viewModel.readRecipes.observe(viewLifecycleOwner) { database ->
+            if (database.isNotEmpty()
+                && !args.backFromBottomSheet
+                || database.isNotEmpty() && dataRequested
+            ) {
+                setList(database)
+                hideShimmerEffect()
+            } else {
+                if (!dataRequested && viewModel.isNetworkConnected.value == NetworkState.CONNECTED) {
+                    requestApiData()
+                    dataRequested = true
                 }
             }
         }
@@ -142,7 +140,6 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
             when (response) {
                 is NetworkResult.Success -> {
                     hideShimmerEffect()
-//                    response.data?.recipes?.let { setList(it) }
                     loadDataFromCache()
                     viewModel.saveMealAndDietType()
                 }
@@ -192,14 +189,12 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun loadDataFromCache() {
-        lifecycleScope.launch {
-            viewModel.readRecipes().collectLatest { database ->
-                if (database.isNotEmpty()) {
-                    setList(database)
-                    hideNoInternetError()
-                } else {
-                    setNoInternetError()
-                }
+        viewModel.readRecipes.observe(viewLifecycleOwner) { database ->
+            if (database.isNotEmpty()) {
+                setList(database)
+                hideNoInternetError()
+            } else {
+                setNoInternetError()
             }
         }
     }

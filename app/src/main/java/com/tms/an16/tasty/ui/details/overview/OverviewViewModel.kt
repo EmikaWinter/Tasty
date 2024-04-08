@@ -1,5 +1,6 @@
 package com.tms.an16.tasty.ui.details.overview
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tms.an16.tasty.database.entity.FavoritesEntity
@@ -18,10 +19,13 @@ class OverviewViewModel @Inject constructor(
 
     val readFavoriteRecipes: Flow<List<FavoritesEntity>> = repository.local.readFavoriteRecipes()
 
+    val recipeById = MutableLiveData<RecipeEntity>()
 
 
-    suspend fun getById(id: Int): RecipeEntity {
-        return repository.local.getRecipeById(id)
+    fun loadRecipeById(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            recipeById.postValue(repository.local.getRecipeById(id))
+        }
     }
 
 //    suspend fun getSearchRecipeById(id: Int): RecipeEntity {

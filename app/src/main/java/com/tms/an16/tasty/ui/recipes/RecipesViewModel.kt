@@ -2,8 +2,10 @@ package com.tms.an16.tasty.ui.recipes
 
 import android.content.Context
 import android.widget.Toast
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.tms.an16.tasty.controller.NetworkController
 import com.tms.an16.tasty.controller.NetworkState
@@ -34,7 +36,7 @@ class RecipesViewModel @Inject constructor(
 
     var recipesResponse = MutableLiveData<NetworkResult<FoodRecipes>>()
 
-//    val readRecipes : Flow<List<RecipeEntity>> = repository.local.readRecipes()
+    val readRecipes: LiveData<List<RecipeEntity>> = repository.local.readRecipes().asLiveData()
 
     val isNetworkConnected = MutableLiveData<NetworkState>()
 
@@ -56,7 +58,7 @@ class RecipesViewModel @Inject constructor(
         }
     }
 
-    fun readRecipes(): Flow<List<RecipeEntity>> = repository.local.readRecipes()
+//    fun readRecipes(): Flow<List<RecipeEntity>> = repository.local.readRecipes()
 
 //    fun readRecipes(){
 //        viewModelScope.launch {

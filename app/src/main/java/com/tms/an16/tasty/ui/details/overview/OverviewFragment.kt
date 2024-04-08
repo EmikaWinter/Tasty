@@ -50,15 +50,14 @@ class OverviewFragment : Fragment() {
 
         val recipeId = args?.getInt(RECIPE_RESULT_KEY) ?: 0
 
-        lifecycleScope.launch {
-            val recipe = viewModel.getById(recipeId)
+        viewModel.loadRecipeById(recipeId)
 
-
+        viewModel.recipeById.observe(viewLifecycleOwner) { recipe ->
             binding?.run {
 //                mainImageView.run {
 //                    Glide.with(requireContext()).load(recipe.image).into(this)
 //                }
-                mainImageView.load(recipe.image){
+                mainImageView.load(recipe.image) {
                     crossfade(600)
                     error(R.drawable.ic_empty_image)
                 }
@@ -79,7 +78,6 @@ class OverviewFragment : Fragment() {
             checkSavedRecipes(recipeId)
 
             binding?.saveToFavImageView?.setOnClickListener {
-
                 if (!recipeSaved) {
                     saveToFavorites(recipe)
                 } else {
@@ -87,6 +85,7 @@ class OverviewFragment : Fragment() {
                 }
             }
         }
+
     }
 
     private fun checkSavedRecipes(id: Int) {
