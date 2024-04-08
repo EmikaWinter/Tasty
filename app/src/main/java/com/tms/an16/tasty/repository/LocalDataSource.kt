@@ -24,10 +24,6 @@ class LocalDataSource @Inject constructor(
         return recipesDao.readTrivia()
     }
 
-    suspend fun getRecipeById(id: Int): RecipeEntity {
-        return recipesDao.getRecipeById(id)
-    }
-
     suspend fun getSelectedRecipeById(id: Int): SelectedRecipeEntity {
         return recipesDao.getSelectedRecipeById(id)
     }
