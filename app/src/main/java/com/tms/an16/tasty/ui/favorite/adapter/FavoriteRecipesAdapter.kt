@@ -14,7 +14,7 @@ class FavoriteRecipesAdapter(
     ListAdapter<FavoritesEntity, FavoriteRecipesViewHolder>(object :
         DiffUtil.ItemCallback<FavoritesEntity>() {
         override fun areItemsTheSame(oldItem: FavoritesEntity, newItem: FavoritesEntity): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.recipeEntity.recipeId == newItem.recipeEntity.recipeId
         }
 
         override fun areContentsTheSame(

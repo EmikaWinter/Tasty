@@ -26,10 +26,10 @@ interface Dao {
     suspend fun getRecipeById(id: Int): RecipeEntity
 
     @Query("SELECT * FROM recipes_table")
-    suspend fun readRecipes(): List<RecipeEntity>
+    fun readRecipes(): Flow<List<RecipeEntity>>
 
-    @Query("SELECT * FROM favorite_recipes_table ORDER BY id ASC")
-    suspend fun readFavoriteRecipes(): List<FavoritesEntity>
+    @Query("SELECT * FROM favorite_recipes_table")
+    fun readFavoriteRecipes(): Flow<List<FavoritesEntity>>
 
     @Query("SELECT * FROM trivia_table ORDER BY id ASC")
     fun readTrivia(): Flow<List<TriviaEntity>>

@@ -1,6 +1,5 @@
 package com.tms.an16.tasty.ui.details.overview
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tms.an16.tasty.database.entity.FavoritesEntity
@@ -8,33 +7,27 @@ import com.tms.an16.tasty.database.entity.RecipeEntity
 import com.tms.an16.tasty.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class OverviewViewModel @Inject constructor(
-    private val repository: Repository
+    private val repository: Repository,
 ) : ViewModel() {
 
-    val favoriteRecipes = MutableLiveData<List<FavoritesEntity>>()
+    val readFavoriteRecipes: Flow<List<FavoritesEntity>> = repository.local.readFavoriteRecipes()
 
-    init {
-        readFavoriteRecipes()
-    }
+
 
     suspend fun getById(id: Int): RecipeEntity {
         return repository.local.getRecipeById(id)
     }
 
-    private fun readFavoriteRecipes() {
-        viewModelScope.launch {
-            val recipes = withContext(Dispatchers.IO) {
-                repository.local.readFavoriteRecipes()
-            }
-            favoriteRecipes.value = recipes
-        }
-    }
+//    suspend fun getSearchRecipeById(id: Int): RecipeEntity {
+//
+//    }
+
 
     fun insertFavoriteRecipe(favoritesEntity: FavoritesEntity) {
         viewModelScope.launch(Dispatchers.IO) {

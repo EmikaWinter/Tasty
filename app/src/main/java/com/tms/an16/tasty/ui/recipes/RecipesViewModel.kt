@@ -1,7 +1,6 @@
 package com.tms.an16.tasty.ui.recipes
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,7 +22,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -36,8 +34,7 @@ class RecipesViewModel @Inject constructor(
 
     var recipesResponse = MutableLiveData<NetworkResult<FoodRecipes>>()
 
-    val recipes = MutableLiveData<List<RecipeEntity>>()
-//        repository.local.readRecipes()
+//    val readRecipes : Flow<List<RecipeEntity>> = repository.local.readRecipes()
 
     val isNetworkConnected = MutableLiveData<NetworkState>()
 
@@ -59,15 +56,17 @@ class RecipesViewModel @Inject constructor(
         }
     }
 
-    fun readRecipes(){
-        viewModelScope.launch {
-            recipes.value = withContext(Dispatchers.IO) {
-                Log.e(";kjk", "${repository.local.readRecipes().size}")
+    fun readRecipes(): Flow<List<RecipeEntity>> = repository.local.readRecipes()
 
-                repository.local.readRecipes()
-            }
-        }
-    }
+//    fun readRecipes(){
+//        viewModelScope.launch {
+//            recipes.value = withContext(Dispatchers.IO) {
+//                Log.e(";kjk", "${repository.local.readRecipes().size}")
+//
+//                repository.local.readRecipes()
+//            }
+//        }
+//    }
 
     fun getRecipes(queries: Map<String, String>) {
         viewModelScope.launch {

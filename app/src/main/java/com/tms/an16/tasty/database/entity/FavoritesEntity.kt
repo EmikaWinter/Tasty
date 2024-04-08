@@ -6,8 +6,6 @@ import com.tms.an16.tasty.util.Constants.Companion.FAVORITE_RECIPES_TABLE
 
 @Entity(tableName = FAVORITE_RECIPES_TABLE)
 data class FavoritesEntity(
+    @PrimaryKey
     var recipeEntity: RecipeEntity
-){
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
-}
+)

@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
+import coil.load
 import com.google.android.material.snackbar.Snackbar
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.database.entity.FavoritesEntity
@@ -21,6 +21,7 @@ import com.tms.an16.tasty.databinding.FragmentOverviewBinding
 import com.tms.an16.tasty.util.Constants.Companion.RECIPE_RESULT_KEY
 import com.tms.an16.tasty.util.parseHtml
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -37,6 +38,7 @@ class OverviewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding = FragmentOverviewBinding.inflate(inflater)
         return binding?.root
     }
@@ -45,7 +47,6 @@ class OverviewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val args = arguments
-//        val recipeResult = args?.getParcelable<RecipeEntity>(RECIPE_RESULT_KEY)
 
         val recipeId = args?.getInt(RECIPE_RESULT_KEY) ?: 0
 
@@ -54,8 +55,12 @@ class OverviewFragment : Fragment() {
 
 
             binding?.run {
-                mainImageView.run {
-                    Glide.with(requireContext()).load(recipe.image).into(this)
+//                mainImageView.run {
+//                    Glide.with(requireContext()).load(recipe.image).into(this)
+//                }
+                mainImageView.load(recipe.image){
+                    crossfade(600)
+                    error(R.drawable.ic_empty_image)
                 }
                 titleTextView.text = recipe.title
                 likesTextView.text = recipe.aggregateLikes.toString()
@@ -85,17 +90,19 @@ class OverviewFragment : Fragment() {
     }
 
     private fun checkSavedRecipes(id: Int) {
-        viewModel.favoriteRecipes.observe(viewLifecycleOwner) { favoritesEntity ->
-            try {
-                for (savedRecipe in favoritesEntity) {
-                    if (savedRecipe.recipeEntity.recipeId == id) {
-                        setColorToSaveToFavImage(R.color.yellow)
-                        savedRecipeId = savedRecipe.id
-                        recipeSaved = true
+        lifecycleScope.launch {
+            viewModel.readFavoriteRecipes.collectLatest { favoritesEntity ->
+                try {
+                    for (savedRecipe in favoritesEntity) {
+                        if (savedRecipe.recipeEntity.recipeId == id) {
+                            setColorToSaveToFavImage(R.color.yellow)
+                            savedRecipeId = savedRecipe.recipeEntity.recipeId
+                            recipeSaved = true
+                        }
                     }
+                } catch (e: Exception) {
+                    Log.d("OverviewFragment", e.message.toString())
                 }
-            } catch (e: Exception) {
-                Log.d("OverviewFragment", e.message.toString())
             }
         }
     }
