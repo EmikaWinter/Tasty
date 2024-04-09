@@ -13,7 +13,6 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -22,9 +21,8 @@ import com.tms.an16.tasty.R
 import com.tms.an16.tasty.database.entity.FavoritesEntity
 import com.tms.an16.tasty.databinding.FragmentFavoriteRecipesBinding
 import com.tms.an16.tasty.ui.favorite.adapter.FavoriteRecipesAdapter
+import com.tms.an16.tasty.util.toSelectedRecipeEntity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FavoriteRecipesFragment : Fragment() {
@@ -45,12 +43,10 @@ class FavoriteRecipesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch {
-            viewModel.readFavoriteRecipes.collectLatest {
+            viewModel.readFavoriteRecipes.observe(viewLifecycleOwner) {
                 setList(it)
                 setNoDataError(it)
             }
-        }
 
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
@@ -80,9 +76,10 @@ class FavoriteRecipesFragment : Fragment() {
             if (adapter == null) {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = FavoriteRecipesAdapter(onClick = { favorite ->
+                    viewModel.saveAndReplaceSelectedRecipe(favorite.toSelectedRecipeEntity())
                     findNavController().navigate(
-                        FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToDetailsActivity(
-                            favorite.result
+                        FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToDetailsFragment(
+                            favorite.recipeEntity.recipeId
                         )
                     )
                 }, onLongClick = { favorite ->

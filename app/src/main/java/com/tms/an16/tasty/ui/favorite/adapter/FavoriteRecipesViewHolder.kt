@@ -2,6 +2,8 @@ package com.tms.an16.tasty.ui.favorite.adapter
 
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.tms.an16.tasty.R
 import com.tms.an16.tasty.database.entity.FavoritesEntity
 import com.tms.an16.tasty.databinding.ItemRecipesBinding
 import com.tms.an16.tasty.util.applyVeganColor
@@ -17,16 +19,20 @@ class FavoriteRecipesViewHolder(private val binding: ItemRecipesBinding) :
     ) {
         binding.run {
             recipeImage.run {
-                Glide.with(context).load(favorite.result.image).into(this)
+                Glide.with(context)
+                    .load(favorite.recipeEntity.image)
+                    .transition(DrawableTransitionOptions.withCrossFade(500))
+                    .error(R.drawable.ic_empty_image)
+                    .into(this)
             }
-            titleTextView.text = favorite.result.title
-            favTextView.text = favorite.result.aggregateLikes.toString()
-            timeTextView.text = favorite.result.readyInMinutes.toString()
+            titleTextView.text = favorite.recipeEntity.title
+            favTextView.text = favorite.recipeEntity.aggregateLikes.toString()
+            timeTextView.text = favorite.recipeEntity.readyInMinutes.toString()
 
-            parseHtml(this.descriptionTextView, favorite.result.summary)
+            parseHtml(this.descriptionTextView, favorite.recipeEntity.summary)
 
-            applyVeganColor(this.veganImageView, favorite.result.vegan)
-            applyVeganColor(this.veganTextView, favorite.result.vegan)
+            applyVeganColor(this.veganImageView, favorite.recipeEntity.vegan)
+            applyVeganColor(this.veganTextView, favorite.recipeEntity.vegan)
         }
 
         binding.root.setOnClickListener {

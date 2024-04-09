@@ -18,23 +18,23 @@
             android:defaultValue="false"
             app:argType="boolean" />
         <action
-            android:id="@+id/action_recipesFragment_to_detailsActivity"
-            app:destination="@id/detailsActivity" />
+            android:id="@+id/action_recipesFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/favoriteRecipesFragment"
         android:name="com.tms.an16.tasty.ui.favorite.FavoriteRecipesFragment"
         android:label="Favorites"
-        tools:layout="@layout/fragment_favorite_recipes" >
+        tools:layout="@layout/fragment_favorite_recipes">
         <action
-            android:id="@+id/action_favoriteRecipesFragment_to_detailsActivity"
-            app:destination="@id/detailsActivity" />
+            android:id="@+id/action_favoriteRecipesFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/triviaFragment"
         android:name="com.tms.an16.tasty.ui.trivia.TriviaFragment"
-        android:label="Profile"
-        tools:layout="@layout/fragment_trivia" >
+        android:label="Trivia"
+        tools:layout="@layout/fragment_trivia">
 
     </fragment>
     <dialog
@@ -48,14 +48,14 @@
             app:popUpTo="@id/recipesFragment"
             app:popUpToInclusive="true" />
     </dialog>
-    <activity
-        android:id="@+id/detailsActivity"
-        android:name="com.tms.an16.tasty.ui.details.DetailsActivity"
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.tms.an16.tasty.ui.details.DetailsFragment"
         android:label="Details"
-        tools:layout="@layout/activity_details" >
+        tools:layout="@layout/fragment_details">
 
         <argument
-            android:name="result"
-            app:argType="com.tms.an16.tasty.model.Result" />
-    </activity>
+            android:name="id_recipe"
+            app:argType="integer" />
+    </fragment>
 </navigation>

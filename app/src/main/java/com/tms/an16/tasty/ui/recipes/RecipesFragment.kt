@@ -18,13 +18,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.controller.NetworkState
+import com.tms.an16.tasty.database.entity.RecipeEntity
 import com.tms.an16.tasty.databinding.FragmentRecipesBinding
-import com.tms.an16.tasty.model.Result
 import com.tms.an16.tasty.network.NetworkResult
 import com.tms.an16.tasty.ui.recipes.adapter.RecipesAdapter
+import com.tms.an16.tasty.util.toSelectedRecipeEntity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -39,7 +40,6 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     private val args by navArgs<RecipesFragmentArgs>()
 
     private var dataRequested = false
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -98,6 +98,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                     loadDataFromCache()
 
                     viewModel.showNetworkStatus(requireContext())
+
                     binding?.choiceActionButton?.setOnClickListener {
                         viewModel.showNetworkStatus(requireContext())
                     }
@@ -119,19 +120,17 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun readDatabase() {
-        lifecycleScope.launch {
-            viewModel.readRecipes.collectLatest { database ->
-                if (database.isNotEmpty()
-                    && !args.backFromBottomSheet
-                    || database.isNotEmpty() && dataRequested
-                ) {
-                    setList(database.first().foodRecipe.results)
-                    hideShimmerEffect()
-                } else {
-                    if (!dataRequested && viewModel.isNetworkConnected.value == NetworkState.CONNECTED) {
-                        requestApiData()
-                        dataRequested = true
-                    }
+        viewModel.readRecipes.observe(viewLifecycleOwner) { database ->
+            if (database.isNotEmpty()
+                && !args.backFromBottomSheet
+                || database.isNotEmpty() && dataRequested
+            ) {
+                setList(database)
+                hideShimmerEffect()
+            } else {
+                if (!dataRequested && viewModel.isNetworkConnected.value == NetworkState.CONNECTED) {
+                    requestApiData()
+                    dataRequested = true
                 }
             }
         }
@@ -143,7 +142,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
             when (response) {
                 is NetworkResult.Success -> {
                     hideShimmerEffect()
-                    response.data?.results?.let { setList(it) }
+                    loadDataFromCache()
                     viewModel.saveMealAndDietType()
                 }
 
@@ -171,7 +170,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
             when (response) {
                 is NetworkResult.Success -> {
                     hideShimmerEffect()
-                    response.data?.results?.let { setList(it) }
+                    response.data?.recipes?.let { setList(it) }
                 }
 
                 is NetworkResult.Error -> {
@@ -181,6 +180,11 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                         requireContext(),
                         response.message.toString(),
                         Toast.LENGTH_SHORT
+                    ).show()
+                    Snackbar.make(
+                        requireView(),
+                        response.message.toString(),
+                        Snackbar.LENGTH_INDEFINITE
                     ).show()
                 }
 
@@ -192,13 +196,12 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun loadDataFromCache() {
-        lifecycleScope.launch {
-            viewModel.readRecipes.collectLatest { database ->
-                if (database.isNotEmpty()) {
-                    setList(database.first().foodRecipe.results)
-                } else {
-                    setNoInternetError()
-                }
+        viewModel.readRecipes.observe(viewLifecycleOwner) { database ->
+            if (database.isNotEmpty()) {
+                setList(database)
+                hideNoInternetError()
+            } else {
+                setNoInternetError()
             }
         }
     }
@@ -218,17 +221,16 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
         }
     }
 
-    private fun setList(list: List<Result>) {
+    private fun setList(list: List<RecipeEntity>) {
         binding?.recyclerView?.run {
             if (adapter == null) {
-                layoutManager = LinearLayoutManager(requireContext())
-                adapter = RecipesAdapter { result ->
+                adapter = RecipesAdapter { recipe ->
+                    viewModel.saveAndReplaceSelectedRecipe(recipe.toSelectedRecipeEntity())
                     findNavController().navigate(
-                        RecipesFragmentDirections.actionRecipesFragmentToDetailsActivity(
-                            result
+                        RecipesFragmentDirections.actionRecipesFragmentToDetailsFragment(
+                            recipe.recipeId
                         )
                     )
-
                 }
             }
             (adapter as? RecipesAdapter)?.submitList(list)
