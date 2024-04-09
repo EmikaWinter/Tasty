@@ -59,18 +59,6 @@ class RecipesViewModel @Inject constructor(
         }
     }
 
-//    fun readRecipes(): Flow<List<RecipeEntity>> = repository.local.readRecipes()
-
-//    fun readRecipes(){
-//        viewModelScope.launch {
-//            recipes.value = withContext(Dispatchers.IO) {
-//                Log.e(";kjk", "${repository.local.readRecipes().size}")
-//
-//                repository.local.readRecipes()
-//            }
-//        }
-//    }
-
     fun getRecipes(queries: Map<String, String>) {
         viewModelScope.launch {
             recipesResponse.value = NetworkResult.Loading()
@@ -109,11 +97,18 @@ class RecipesViewModel @Inject constructor(
         }
     }
 
-    fun saveSelectedRecipe(selectedRecipeEntity: SelectedRecipeEntity) {
+    fun saveAndReplaceSelectedRecipe(selectedRecipeEntity: SelectedRecipeEntity) {
         viewModelScope.launch {
-            repository.local.insertSelectedRecipe(selectedRecipeEntity)
+            repository.local.saveSelectedRecipe(selectedRecipeEntity)
         }
     }
+
+//    fun clearSelectedRecipes() {
+//        viewModelScope.launch {
+//            repository.local.clearSelectedRecipes()
+//        }
+//    }
+
 
     fun saveMealAndDietType() =
         viewModelScope.launch(Dispatchers.IO) {

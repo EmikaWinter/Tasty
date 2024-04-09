@@ -21,4 +21,11 @@ class DetailsViewModel @Inject constructor(private val repository: Repository) :
             selectedRecipe.postValue(repository.local.getSelectedRecipeById(id).toRecipeEntity())
         }
     }
+
+    fun deleteAllSelectedRecipes() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.local.deleteAllSelectedRecipes()
+
+        }
+    }
 }

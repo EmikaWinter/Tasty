@@ -24,10 +24,6 @@ class LocalDataSource @Inject constructor(
         return recipesDao.readTrivia()
     }
 
-    suspend fun getSelectedRecipeById(id: Int): SelectedRecipeEntity {
-        return recipesDao.getSelectedRecipeById(id)
-    }
-
     suspend fun insertRecipes(list: List<RecipeEntity>) {
         recipesDao.insertRecipes(list)
     }
@@ -40,12 +36,20 @@ class LocalDataSource @Inject constructor(
         recipesDao.insertTrivia(triviaEntity)
     }
 
-    suspend fun insertSelectedRecipe(selected: SelectedRecipeEntity) {
+    suspend fun saveSelectedRecipe(selected: SelectedRecipeEntity) {
         recipesDao.insertSelectedRecipe(selected)
+    }
+
+    suspend fun getSelectedRecipeById(id: Int): SelectedRecipeEntity {
+        return recipesDao.getSelectedRecipeById(id)
     }
 
     suspend fun deleteFavoriteRecipe(favoritesEntity: FavoritesEntity) {
         recipesDao.deleteFavoriteRecipe(favoritesEntity)
+    }
+
+    suspend fun deleteAllSelectedRecipes() {
+        recipesDao.deleteAllSelectedRecipes()
     }
 
     suspend fun deleteAllRecipes() {

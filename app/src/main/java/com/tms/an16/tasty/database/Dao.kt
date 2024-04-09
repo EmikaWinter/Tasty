@@ -29,13 +29,10 @@ interface Dao {
     @Query("SELECT * FROM selected_recipes_table WHERE recipeId == :id")
     suspend fun getSelectedRecipeById(id: Int): SelectedRecipeEntity
 
-    @Query("SELECT * FROM recipes_table WHERE recipeId == :id")
-    suspend fun getRecipeById(id: Int): RecipeEntity
-
     @Query("SELECT * FROM recipes_table ORDER BY title ASC")
     fun readRecipes(): Flow<List<RecipeEntity>>
 
-    @Query("SELECT * FROM favorite_recipes_table")
+    @Query("SELECT * FROM favorite_recipes_table ORDER BY saveTimestamp DESC")
     fun readFavoriteRecipes(): Flow<List<FavoritesEntity>>
 
     @Query("SELECT * FROM trivia_table ORDER BY id ASC")
@@ -43,6 +40,9 @@ interface Dao {
 
     @Delete
     suspend fun deleteFavoriteRecipe(favoritesEntity: FavoritesEntity)
+
+    @Query("DELETE FROM selected_recipes_table")
+    suspend fun deleteAllSelectedRecipes()
 
     @Query("DELETE FROM recipes_table")
     suspend fun deleteAllRecipes()

@@ -12,7 +12,8 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import coil.load
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.snackbar.Snackbar
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.database.entity.FavoritesEntity
@@ -54,13 +55,14 @@ class OverviewFragment : Fragment() {
 
         viewModel.selectedRecipe.observe(viewLifecycleOwner) { recipe ->
             binding?.run {
-//                mainImageView.run {
-//                    Glide.with(requireContext()).load(recipe.image).into(this)
-//                }
-                mainImageView.load(recipe.image) {
-                    crossfade(600)
-                    error(R.drawable.ic_empty_image)
+                mainImageView.run {
+                    Glide.with(requireContext())
+                        .load(recipe.image)
+                        .transition(DrawableTransitionOptions.withCrossFade(300))
+                        .error(R.drawable.ic_empty_image)
+                        .into(this)
                 }
+
                 titleTextView.text = recipe.title
                 likesTextView.text = recipe.aggregateLikes.toString()
                 timeTextView.text = recipe.readyInMinutes.toString()
@@ -106,7 +108,7 @@ class OverviewFragment : Fragment() {
     }
 
     private fun saveToFavorites(recipeEntity: RecipeEntity) {
-        val favoritesEntity = FavoritesEntity(recipeEntity)
+        val favoritesEntity = FavoritesEntity(recipeEntity, System.currentTimeMillis())
         viewModel.insertFavoriteRecipe(favoritesEntity)
         setColorToSaveToFavImage(R.color.yellow)
         showSnackBar("Recipe saved")

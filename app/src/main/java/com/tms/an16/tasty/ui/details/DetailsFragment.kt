@@ -117,4 +117,9 @@ class DetailsFragment : Fragment() {
         }.attach()
 
     }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.deleteAllSelectedRecipes()
+    }
 }

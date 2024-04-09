@@ -1,7 +1,6 @@
 package com.tms.an16.tasty.ui.recipes
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -54,9 +53,6 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.e("adapter", "null")
-
-
         checkIsBackOnline()
 
         isNetworkConnected()
@@ -102,11 +98,6 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                     loadDataFromCache()
 
                     viewModel.showNetworkStatus(requireContext())
-//                    Snackbar.make(
-//                        requireView(),
-//                        "No Internet Connection.",
-//                        Snackbar.LENGTH_INDEFINITE
-//                    ).show()
 
                     binding?.choiceActionButton?.setOnClickListener {
                         viewModel.showNetworkStatus(requireContext())
@@ -234,7 +225,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
         binding?.recyclerView?.run {
             if (adapter == null) {
                 adapter = RecipesAdapter { recipe ->
-                    viewModel.saveSelectedRecipe(recipe.toSelectedRecipeEntity())
+                    viewModel.saveAndReplaceSelectedRecipe(recipe.toSelectedRecipeEntity())
                     findNavController().navigate(
                         RecipesFragmentDirections.actionRecipesFragmentToDetailsFragment(
                             recipe.recipeId

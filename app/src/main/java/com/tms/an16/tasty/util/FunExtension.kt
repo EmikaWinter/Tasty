@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.tms.an16.tasty.R
+import com.tms.an16.tasty.database.entity.FavoritesEntity
 import com.tms.an16.tasty.database.entity.RecipeEntity
 import com.tms.an16.tasty.database.entity.SelectedRecipeEntity
 import org.jsoup.Jsoup
@@ -66,6 +67,26 @@ fun RecipeEntity.toSelectedRecipeEntity(): SelectedRecipeEntity {
         vegan,
         vegetarian,
         veryHealthy,
+    )
+}
+
+fun FavoritesEntity.toSelectedRecipeEntity(): SelectedRecipeEntity {
+    return SelectedRecipeEntity(
+        recipeEntity.recipeId,
+        recipeEntity.aggregateLikes,
+        recipeEntity.cheap,
+        recipeEntity.dairyFree,
+        recipeEntity.extendedIngredients,
+        recipeEntity.glutenFree,
+        recipeEntity.image,
+        recipeEntity.readyInMinutes,
+        recipeEntity.sourceName,
+        recipeEntity.sourceUrl,
+        recipeEntity.summary,
+        recipeEntity.title,
+        recipeEntity.vegan,
+        recipeEntity.vegetarian,
+        recipeEntity.veryHealthy,
     )
 }
 

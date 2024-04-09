@@ -13,7 +13,6 @@ import com.tms.an16.tasty.ui.details.ingredients.adapter.IngredientsAdapter
 import com.tms.an16.tasty.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class IngredientsFragment : Fragment() {
 
@@ -41,8 +40,6 @@ class IngredientsFragment : Fragment() {
         viewModel.selectedRecipe.observe(viewLifecycleOwner) { recipe ->
                 setList(recipe.extendedIngredients)
         }
-//        val myBundle: Result? = args?.getParcelable(Constants.RECIPE_RESULT_KEY)
-//        myBundle?.extendedIngredients?.let { setList(it) }
     }
 
     private fun setList(list: List<ExtendedIngredient>) {

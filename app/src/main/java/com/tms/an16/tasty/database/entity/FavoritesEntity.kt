@@ -7,5 +7,6 @@ import com.tms.an16.tasty.util.Constants.Companion.FAVORITE_RECIPES_TABLE
 @Entity(tableName = FAVORITE_RECIPES_TABLE)
 data class FavoritesEntity(
     @PrimaryKey
-    var recipeEntity: RecipeEntity
+    val recipeEntity: RecipeEntity,
+    val saveTimestamp: Long = 0
 )
