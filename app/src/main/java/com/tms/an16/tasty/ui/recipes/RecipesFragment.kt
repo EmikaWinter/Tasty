@@ -18,7 +18,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.snackbar.Snackbar
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.controller.NetworkState
 import com.tms.an16.tasty.database.entity.RecipeEntity
@@ -90,17 +89,19 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                         readDatabase()
 
                         hideNoInternetError()
-                        viewModel.showNetworkStatus(requireContext())
+                        Toast.makeText(context, getString(R.string.we_are_back_online), Toast.LENGTH_SHORT).show()
+                        viewModel.saveBackOnline(false)
                     }
                 }
 
                 NetworkState.DISCONNECTED -> {
                     loadDataFromCache()
 
-                    viewModel.showNetworkStatus(requireContext())
+                    Toast.makeText(context, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show()
+                    viewModel.saveBackOnline(true)
 
                     binding?.choiceActionButton?.setOnClickListener {
-                        viewModel.showNetworkStatus(requireContext())
+                        Toast.makeText(context, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show()
                     }
                 }
 
@@ -151,7 +152,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                     loadDataFromCache()
                     Toast.makeText(
                         requireContext(),
-                        response.message.toString(),
+                        getMessageFromResponse(response.messageId, response.message),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -178,13 +179,8 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                     loadDataFromCache()
                     Toast.makeText(
                         requireContext(),
-                        response.message.toString(),
+                        getMessageFromResponse(response.messageId, response.message),
                         Toast.LENGTH_SHORT
-                    ).show()
-                    Snackbar.make(
-                        requireView(),
-                        response.message.toString(),
-                        Snackbar.LENGTH_INDEFINITE
                     ).show()
                 }
 
@@ -194,6 +190,14 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
             }
         }
     }
+
+    private fun getMessageFromResponse(messageId: Int?, message: String?): String =
+        when {
+            messageId != null -> getString(messageId)
+            message != null -> message
+            else -> getString(R.string.empty_string)
+        }
+
 
     private fun loadDataFromCache() {
         viewModel.readRecipes.observe(viewLifecycleOwner) { database ->

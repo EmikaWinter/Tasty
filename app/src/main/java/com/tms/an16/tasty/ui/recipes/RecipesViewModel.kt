@@ -1,12 +1,11 @@
 package com.tms.an16.tasty.ui.recipes
 
-import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.tms.an16.tasty.R
 import com.tms.an16.tasty.controller.NetworkController
 import com.tms.an16.tasty.controller.NetworkState
 import com.tms.an16.tasty.database.entity.RecipeEntity
@@ -41,9 +40,9 @@ class RecipesViewModel @Inject constructor(
 
     val isNetworkConnected = MutableLiveData<NetworkState>()
 
-    var backOnline = false
-
     val readMealAndDietType = dataStoreRepository.readMealAndDietType
+
+    var backOnline = false
 
     val readBackOnline: Flow<Boolean> = dataStoreRepository.readBackOnline
 
@@ -73,11 +72,11 @@ class RecipesViewModel @Inject constructor(
                     }
 
                 } catch (e: Exception) {
-                    recipesResponse.value = NetworkResult.Error("Recipes not found.")
+                    recipesResponse.value = NetworkResult.Error(messageId = R.string.recipes_not_found)
 
                 }
             } else {
-                recipesResponse.value = NetworkResult.Error("No Internet Connection.")
+                recipesResponse.value = NetworkResult.Error(messageId = R.string.no_internet_connection)
             }
         }
     }
@@ -90,10 +89,10 @@ class RecipesViewModel @Inject constructor(
                     val response = repository.remote.searchRecipes(searchQuery)
                     searchedRecipesResponse.value = handleFoodRecipesResponse(response)
                 } catch (e: java.lang.Exception) {
-                    searchedRecipesResponse.value = NetworkResult.Error("Recipes not found.")
+                    searchedRecipesResponse.value = NetworkResult.Error(messageId = R.string.recipes_not_found)
                 }
             } else {
-                searchedRecipesResponse.value = NetworkResult.Error("No Internet Connection.")
+                searchedRecipesResponse.value = NetworkResult.Error(messageId = R.string.no_internet_connection)
             }
         }
     }
@@ -147,19 +146,8 @@ class RecipesViewModel @Inject constructor(
         return dataStoreRepository.applySearchQuery(searchQuery)
     }
 
-    fun showNetworkStatus(context: Context) {
-        if (isNetworkConnected.value != NetworkState.CONNECTED) {
-            Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show()
-            saveBackOnline(true)
-        } else {
-            if (backOnline) {
-                Toast.makeText(context, "We are back online", Toast.LENGTH_SHORT).show()
-                saveBackOnline(false)
-            }
-        }
-    }
 
-    private fun saveBackOnline(backOnline: Boolean) {
+    fun saveBackOnline(backOnline: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             dataStoreRepository.saveBackOnline(backOnline)
         }
@@ -175,15 +163,15 @@ class RecipesViewModel @Inject constructor(
     private fun handleFoodRecipesResponse(response: Response<FoodRecipes>): NetworkResult<FoodRecipes> {
         return when {
             response.message().toString().contains("timeout") -> {
-                NetworkResult.Error("Timeout")
+                NetworkResult.Error(messageId = R.string.timeout)
             }
 
             response.code() == 402 -> {
-                NetworkResult.Error("API Key Limited.")
+                NetworkResult.Error(messageId = R.string.api_key_limited)
             }
 
             response.body()?.recipes.isNullOrEmpty() -> {
-                NetworkResult.Error("Recipes not found.")
+                NetworkResult.Error(messageId = R.string.recipes_not_found)
             }
 
             response.isSuccessful -> {
@@ -191,7 +179,7 @@ class RecipesViewModel @Inject constructor(
             }
 
             else -> {
-                NetworkResult.Error(response.message())
+                NetworkResult.Error(message = response.message())
             }
         }
     }

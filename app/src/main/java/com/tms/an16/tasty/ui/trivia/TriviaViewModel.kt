@@ -3,6 +3,7 @@ package com.tms.an16.tasty.ui.trivia
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tms.an16.tasty.R
 import com.tms.an16.tasty.controller.NetworkController
 import com.tms.an16.tasty.controller.NetworkState
 import com.tms.an16.tasty.database.entity.TriviaEntity
@@ -50,10 +51,10 @@ class TriviaViewModel @Inject constructor(
                         offlineCacheTrivia(trivia)
                     }
                 } catch (e: Exception) {
-                    triviaResponse.value = NetworkResult.Error("Data not found.")
+                    triviaResponse.value = NetworkResult.Error(messageId = R.string.data_not_found)
                 }
             } else {
-                triviaResponse.value = NetworkResult.Error("No Internet Connection.")
+                triviaResponse.value = NetworkResult.Error(messageId = R.string.no_internet_connection)
             }
         }
     }
@@ -61,11 +62,11 @@ class TriviaViewModel @Inject constructor(
     private fun handleTriviaResponse(response: Response<Trivia>): NetworkResult<Trivia> {
         return when {
             response.message().toString().contains("timeout") -> {
-                NetworkResult.Error("Timeout")
+                NetworkResult.Error(messageId = R.string.timeout)
             }
 
             response.code() == 402 -> {
-                NetworkResult.Error("API Key Limited.")
+                NetworkResult.Error(messageId = R.string.api_key_limited)
             }
 
             response.isSuccessful -> {
@@ -73,7 +74,7 @@ class TriviaViewModel @Inject constructor(
             }
 
             else -> {
-                NetworkResult.Error(response.message())
+                NetworkResult.Error(message = response.message())
             }
         }
     }

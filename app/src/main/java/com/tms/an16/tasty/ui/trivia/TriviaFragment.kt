@@ -94,7 +94,7 @@ class TriviaFragment : Fragment() {
                     loadDataFromCache()
                     Toast.makeText(
                         requireContext(),
-                        response.message.toString(),
+                        getMessageFromResponse(response.messageId, response.message),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -135,4 +135,11 @@ class TriviaFragment : Fragment() {
             errorTextView.visibility = View.VISIBLE
         }
     }
+
+    private fun getMessageFromResponse(messageId: Int?, message: String?): String =
+        when {
+            messageId != null -> getString(messageId)
+            message != null -> message
+            else -> getString(R.string.empty_string)
+        }
 }
