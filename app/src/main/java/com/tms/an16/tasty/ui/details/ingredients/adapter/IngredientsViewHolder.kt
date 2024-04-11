@@ -2,6 +2,7 @@ package com.tms.an16.tasty.ui.details.ingredients.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.databinding.ItemIngredientsBinding
 import com.tms.an16.tasty.model.ExtendedIngredient
@@ -15,7 +16,9 @@ class IngredientsViewHolder(private val binding: ItemIngredientsBinding) :
 
         binding.ingredientImageView.run {
             Glide.with(context).load(BASE_IMAGE_URL + ingredients.image)
-                .error(R.drawable.ic_empty_image).into(this)
+                .transition(DrawableTransitionOptions.withCrossFade(500))
+                .error(R.drawable.ic_empty_image)
+                .into(this)
         }
 
         binding.ingredientName.text = ingredients.name.replaceFirstChar {

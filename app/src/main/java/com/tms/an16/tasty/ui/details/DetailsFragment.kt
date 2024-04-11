@@ -88,9 +88,9 @@ class DetailsFragment : Fragment() {
         fragments.add(InstructionsFragment())
 
         val titles = ArrayList<String>()
-        titles.add("Overview")
-        titles.add("Ingredients")
-        titles.add("Instructions")
+        titles.add(getString(R.string.overview))
+        titles.add(getString(R.string.ingredients))
+        titles.add(getString(R.string.instructions))
 
         val resultBundle = Bundle()
         resultBundle.putInt(Constants.RECIPE_RESULT_KEY, args.idRecipe)

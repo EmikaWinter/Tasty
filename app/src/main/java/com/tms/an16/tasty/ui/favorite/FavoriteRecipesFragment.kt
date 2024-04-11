@@ -60,9 +60,9 @@ class FavoriteRecipesFragment : Fragment() {
 
                     Snackbar.make(
                         requireView(),
-                        "All recipes removed.",
+                        getString(R.string.all_recipes_removed),
                         Snackbar.LENGTH_SHORT
-                    ).setAction("Okay") {}
+                    ).setAction(getString(R.string.OK)) {}
                         .show()
                 }
                 return true
@@ -84,19 +84,19 @@ class FavoriteRecipesFragment : Fragment() {
                     )
                 }, onLongClick = { favorite ->
                     MaterialAlertDialogBuilder(requireContext())
-                        .setTitle("Delete this recipe from favorites?")
+                        .setTitle(getString(R.string.delete_from_favorites))
                         .setIcon(R.drawable.ic_delete)
-                        .setMessage("This action cannot be undone")
-                        .setPositiveButton("Yes") { dialog, _ ->
+                        .setMessage(getString(R.string.this_action_cannot_be_undone))
+                        .setPositiveButton(getString(R.string.yes)) { dialog, _ ->
 
                             viewModel.deleteFavoriteRecipe(favorite)
 
                             dialog.dismiss()
                             Toast.makeText(
-                                requireContext(), "Deleted", Toast.LENGTH_SHORT
+                                requireContext(), getString(R.string.deleted), Toast.LENGTH_SHORT
                             ).show()
                         }
-                        .setNegativeButton("No") { dialog, _ ->
+                        .setNegativeButton(getString(R.string.no)) { dialog, _ ->
                             dialog.dismiss()
                         }
                         .create()

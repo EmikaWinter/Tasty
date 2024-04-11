@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/recipesFragment"
         android:name="com.tms.an16.tasty.ui.recipes.RecipesFragment"
-        android:label="Recipes"
+        android:label="@string/recipes"
         tools:layout="@layout/fragment_recipes">
         <action
             android:id="@+id/action_recipesFragment_to_recipesBottomSheet"
@@ -24,7 +24,7 @@
     <fragment
         android:id="@+id/favoriteRecipesFragment"
         android:name="com.tms.an16.tasty.ui.favorite.FavoriteRecipesFragment"
-        android:label="Favorites"
+        android:label="@string/favorite_recipes"
         tools:layout="@layout/fragment_favorite_recipes">
         <action
             android:id="@+id/action_favoriteRecipesFragment_to_detailsFragment"
@@ -33,7 +33,7 @@
     <fragment
         android:id="@+id/triviaFragment"
         android:name="com.tms.an16.tasty.ui.trivia.TriviaFragment"
-        android:label="Trivia"
+        android:label="@string/trivia"
         tools:layout="@layout/fragment_trivia">
 
     </fragment>
@@ -51,7 +51,7 @@
     <fragment
         android:id="@+id/detailsFragment"
         android:name="com.tms.an16.tasty.ui.details.DetailsFragment"
-        android:label="Details"
+        android:label="@string/details"
         tools:layout="@layout/fragment_details">
 
         <argument

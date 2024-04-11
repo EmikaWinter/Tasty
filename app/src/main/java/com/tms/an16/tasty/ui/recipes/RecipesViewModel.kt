@@ -74,6 +74,7 @@ class RecipesViewModel @Inject constructor(
 
                 } catch (e: Exception) {
                     recipesResponse.value = NetworkResult.Error("Recipes not found.")
+
                 }
             } else {
                 recipesResponse.value = NetworkResult.Error("No Internet Connection.")
@@ -102,13 +103,6 @@ class RecipesViewModel @Inject constructor(
             repository.local.saveSelectedRecipe(selectedRecipeEntity)
         }
     }
-
-//    fun clearSelectedRecipes() {
-//        viewModelScope.launch {
-//            repository.local.clearSelectedRecipes()
-//        }
-//    }
-
 
     fun saveMealAndDietType() =
         viewModelScope.launch(Dispatchers.IO) {
@@ -155,11 +149,11 @@ class RecipesViewModel @Inject constructor(
 
     fun showNetworkStatus(context: Context) {
         if (isNetworkConnected.value != NetworkState.CONNECTED) {
-            Toast.makeText(context, "No Internet Connection.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show()
             saveBackOnline(true)
         } else {
             if (backOnline) {
-                Toast.makeText(context, "We're back online.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "We are back online", Toast.LENGTH_SHORT).show()
                 saveBackOnline(false)
             }
         }

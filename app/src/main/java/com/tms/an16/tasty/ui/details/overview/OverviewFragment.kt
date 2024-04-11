@@ -111,7 +111,7 @@ class OverviewFragment : Fragment() {
         val favoritesEntity = FavoritesEntity(recipeEntity, System.currentTimeMillis())
         viewModel.insertFavoriteRecipe(favoritesEntity)
         setColorToSaveToFavImage(R.color.yellow)
-        showSnackBar("Recipe saved")
+        showSnackBar(getString(R.string.recipe_saved))
         recipeSaved = true
     }
 
@@ -119,7 +119,7 @@ class OverviewFragment : Fragment() {
         val favoritesEntity = FavoritesEntity(recipeEntity)
         viewModel.deleteFavoriteRecipe(favoritesEntity)
         setColorToSaveToFavImage(R.color.white)
-        showSnackBar("Removed from Favorites")
+        showSnackBar(getString(R.string.removed_from_favorites))
         recipeSaved = false
     }
 
@@ -128,7 +128,7 @@ class OverviewFragment : Fragment() {
             requireView(),
             message,
             Snackbar.LENGTH_SHORT
-        ).setAction("Okay") {}
+        ).setAction(getString(R.string.OK)) {}
             .show()
     }
 
