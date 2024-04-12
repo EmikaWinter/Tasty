@@ -30,7 +30,9 @@ class DetailsFragment : Fragment() {
     private var url = "no data"
     private var title = "no data"
 
-    private var instructionsFragment: InstructionsFragment = InstructionsFragment()
+    private val overviewFragment = OverviewFragment()
+    private val ingredientsFragment = IngredientsFragment()
+    private val instructionsFragment = InstructionsFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,8 +81,8 @@ class DetailsFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         val fragments = ArrayList<Fragment>()
-        fragments.add(OverviewFragment())
-        fragments.add(IngredientsFragment())
+        fragments.add(overviewFragment)
+        fragments.add(ingredientsFragment)
         fragments.add(instructionsFragment)
 
         val titles = ArrayList<String>()
