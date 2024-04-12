@@ -81,7 +81,7 @@ class FavoriteRecipesFragment : Fragment() {
 
                     findNavController().navigate(
                         FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToDetailsFragment(
-                            favorite.recipeEntity.recipeId
+//                            favorite.recipeEntity.recipeId
                         )
                     )
                 }, onLongClick = { favorite ->

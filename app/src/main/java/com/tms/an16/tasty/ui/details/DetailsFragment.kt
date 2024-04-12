@@ -30,6 +30,7 @@ class DetailsFragment : Fragment() {
     private var url = "no data"
     private var title = "no data"
 
+    private var instructionsFragment: InstructionsFragment = InstructionsFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,7 +71,7 @@ class DetailsFragment : Fragment() {
                     }
 
                     R.id.save_as_pdf_recipe -> {
-//              TODO
+                        instructionsFragment.printPdf()
                     }
                 }
                 return true
@@ -80,7 +81,7 @@ class DetailsFragment : Fragment() {
         val fragments = ArrayList<Fragment>()
         fragments.add(OverviewFragment())
         fragments.add(IngredientsFragment())
-        fragments.add(InstructionsFragment())
+        fragments.add(instructionsFragment)
 
         val titles = ArrayList<String>()
         titles.add(getString(R.string.overview))
@@ -94,15 +95,17 @@ class DetailsFragment : Fragment() {
             fragments, this
         )
 
-        binding?.viewPager2?.isUserInputEnabled = false
-        binding?.viewPager2?.apply {
-            adapter = pagerAdapter
+        binding?.run {
+            viewPager2.apply {
+                adapter = pagerAdapter
+                offscreenPageLimit = 3
+                isUserInputEnabled = false
+            }
+
+            TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
+                tab.text = titles[position]
+            }.attach()
         }
-
-        TabLayoutMediator(binding!!.tabLayout, binding!!.viewPager2) { tab, position ->
-            tab.text = titles[position]
-        }.attach()
-
     }
 
 }

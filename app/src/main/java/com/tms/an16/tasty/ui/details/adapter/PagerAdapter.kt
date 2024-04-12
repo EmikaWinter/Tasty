@@ -8,6 +8,7 @@ class PagerAdapter(
     fragment: Fragment
 ) : FragmentStateAdapter(fragment) {
 
+
     override fun getItemCount(): Int {
         return fragments.size
     }

@@ -1,7 +1,9 @@
 package com.tms.an16.tasty.ui.details.instructions
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
+import android.print.PrintManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,6 +43,21 @@ class InstructionsFragment : Fragment() {
             }
             instructionsWebView.settings.javaScriptEnabled = true
             instructionsWebView.loadUrl(recipe.sourceUrl)
+
+        }
+    }
+
+    fun printPdf() {
+        binding?.run {
+            val printManager: PrintManager =
+                requireContext().getSystemService(Context.PRINT_SERVICE) as PrintManager
+            val printAdapter =
+                instructionsWebView.createPrintDocumentAdapter("recipe_instructions")
+            printManager.print(
+                "print_instructions",
+                printAdapter,
+                null
+            )
         }
     }
 }

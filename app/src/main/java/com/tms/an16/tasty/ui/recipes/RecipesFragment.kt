@@ -246,7 +246,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
                     findNavController().navigate(
                         RecipesFragmentDirections.actionRecipesFragmentToDetailsFragment(
-                            recipe.recipeId
+//                            recipe.recipeId
                         )
                     )
                 }

@@ -11,13 +11,10 @@ class Constants {
 //        10cac3ab3a1841d8aa15d33c263fcc30
 //        e957d36791794404b092c31717baf0b8
 
-        const val RECIPE_RESULT_KEY = "recipeBundle"
-        
         // ROOM Database
         const val DATABASE_NAME = "recipes_database"
         const val RECIPES_TABLE = "recipes_table"
         const val FAVORITE_RECIPES_TABLE = "favorite_recipes_table"
-        const val SELECTED_RECIPES_TABLE = "selected_recipes_table"
         const val TRIVIA_TABLE = "trivia_table"
 
         // API Query Keys
