@@ -30,7 +30,7 @@ class TriviaFragment : Fragment() {
 
     private val viewModel: TriviaViewModel by viewModels()
 
-    private var trivia = "No Food Trivia"
+    private var trivia = getString(R.string.data_not_found)
 
     override fun onCreateView(
         inflater: LayoutInflater,
