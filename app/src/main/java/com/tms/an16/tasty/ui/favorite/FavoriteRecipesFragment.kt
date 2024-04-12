@@ -18,10 +18,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.tms.an16.tasty.R
+import com.tms.an16.tasty.controller.SelectedRecipeController
 import com.tms.an16.tasty.database.entity.FavoritesEntity
 import com.tms.an16.tasty.databinding.FragmentFavoriteRecipesBinding
 import com.tms.an16.tasty.ui.favorite.adapter.FavoriteRecipesAdapter
-import com.tms.an16.tasty.util.toSelectedRecipeEntity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -76,10 +76,12 @@ class FavoriteRecipesFragment : Fragment() {
             if (adapter == null) {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = FavoriteRecipesAdapter(onClick = { favorite ->
-                    viewModel.saveAndReplaceSelectedRecipe(favorite.toSelectedRecipeEntity())
+
+                    SelectedRecipeController.selectedRecipeEntity = favorite.recipeEntity
+
                     findNavController().navigate(
                         FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToDetailsFragment(
-                            favorite.recipeEntity.recipeId
+//                            favorite.recipeEntity.recipeId
                         )
                     )
                 }, onLongClick = { favorite ->

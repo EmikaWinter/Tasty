@@ -30,7 +30,7 @@ class TriviaFragment : Fragment() {
 
     private val viewModel: TriviaViewModel by viewModels()
 
-    private var trivia = getString(R.string.data_not_found)
+    private var trivia = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +43,7 @@ class TriviaFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {

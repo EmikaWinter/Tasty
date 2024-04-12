@@ -54,7 +54,8 @@ class TriviaViewModel @Inject constructor(
                     triviaResponse.value = NetworkResult.Error(messageId = R.string.data_not_found)
                 }
             } else {
-                triviaResponse.value = NetworkResult.Error(messageId = R.string.no_internet_connection)
+                triviaResponse.value =
+                    NetworkResult.Error(messageId = R.string.no_internet_connection)
             }
         }
     }

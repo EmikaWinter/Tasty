@@ -11,17 +11,15 @@ import android.view.ViewGroup
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.navArgs
 import com.google.android.material.tabs.TabLayoutMediator
 import com.tms.an16.tasty.R
+import com.tms.an16.tasty.controller.SelectedRecipeController
 import com.tms.an16.tasty.databinding.FragmentDetailsBinding
 import com.tms.an16.tasty.ui.details.adapter.PagerAdapter
 import com.tms.an16.tasty.ui.details.ingredients.IngredientsFragment
 import com.tms.an16.tasty.ui.details.instructions.InstructionsFragment
 import com.tms.an16.tasty.ui.details.overview.OverviewFragment
-import com.tms.an16.tasty.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,12 +27,10 @@ class DetailsFragment : Fragment() {
 
     private var binding: FragmentDetailsBinding? = null
 
-    private val viewModel: DetailsViewModel by viewModels()
-
-    private val args by navArgs<DetailsFragmentArgs>()
-
     private var url = "no data"
     private var title = "no data"
+
+    private var instructionsFragment: InstructionsFragment = InstructionsFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,7 +71,7 @@ class DetailsFragment : Fragment() {
                     }
 
                     R.id.save_as_pdf_recipe -> {
-//              TODO
+                        instructionsFragment.printPdf()
                     }
                 }
                 return true
@@ -85,41 +81,31 @@ class DetailsFragment : Fragment() {
         val fragments = ArrayList<Fragment>()
         fragments.add(OverviewFragment())
         fragments.add(IngredientsFragment())
-        fragments.add(InstructionsFragment())
+        fragments.add(instructionsFragment)
 
         val titles = ArrayList<String>()
         titles.add(getString(R.string.overview))
         titles.add(getString(R.string.ingredients))
         titles.add(getString(R.string.instructions))
 
-        val resultBundle = Bundle()
-        resultBundle.putInt(Constants.RECIPE_RESULT_KEY, args.idRecipe)
-
-        viewModel.loadSelectedRecipeById(args.idRecipe)
-
-        viewModel.selectedRecipe.observe(viewLifecycleOwner) { recipe ->
-            url = recipe?.sourceUrl.toString()
-            title = recipe?.title.toString()
-        }
+        url = SelectedRecipeController.selectedRecipeEntity?.sourceUrl.toString()
+        title = SelectedRecipeController.selectedRecipeEntity?.title.toString()
 
         val pagerAdapter = PagerAdapter(
-            resultBundle,
             fragments, this
         )
 
-        binding?.viewPager2?.isUserInputEnabled = false
-        binding?.viewPager2?.apply {
-            adapter = pagerAdapter
+        binding?.run {
+            viewPager2.apply {
+                adapter = pagerAdapter
+                offscreenPageLimit = 3
+                isUserInputEnabled = false
+            }
+
+            TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
+                tab.text = titles[position]
+            }.attach()
         }
-
-        TabLayoutMediator(binding!!.tabLayout, binding!!.viewPager2) { tab, position ->
-            tab.text = titles[position]
-        }.attach()
-
     }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.deleteAllSelectedRecipes()
-    }
 }

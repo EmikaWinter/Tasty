@@ -1,10 +1,7 @@
 package com.tms.an16.tasty.model
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
 data class ExtendedIngredient(
     @SerializedName("amount")
     val amount: Double,
@@ -18,4 +15,4 @@ data class ExtendedIngredient(
     val original: String,
     @SerializedName("unit")
     val unit: String
-): Parcelable
+)

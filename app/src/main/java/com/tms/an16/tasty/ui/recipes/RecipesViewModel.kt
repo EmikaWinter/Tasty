@@ -9,7 +9,6 @@ import com.tms.an16.tasty.R
 import com.tms.an16.tasty.controller.NetworkController
 import com.tms.an16.tasty.controller.NetworkState
 import com.tms.an16.tasty.database.entity.RecipeEntity
-import com.tms.an16.tasty.database.entity.SelectedRecipeEntity
 import com.tms.an16.tasty.model.FoodRecipes
 import com.tms.an16.tasty.network.NetworkResult
 import com.tms.an16.tasty.repository.DataStoreRepository
@@ -72,11 +71,13 @@ class RecipesViewModel @Inject constructor(
                     }
 
                 } catch (e: Exception) {
-                    recipesResponse.value = NetworkResult.Error(messageId = R.string.recipes_not_found)
+                    recipesResponse.value =
+                        NetworkResult.Error(messageId = R.string.recipes_not_found)
 
                 }
             } else {
-                recipesResponse.value = NetworkResult.Error(messageId = R.string.no_internet_connection)
+                recipesResponse.value =
+                    NetworkResult.Error(messageId = R.string.no_internet_connection)
             }
         }
     }
@@ -89,17 +90,13 @@ class RecipesViewModel @Inject constructor(
                     val response = repository.remote.searchRecipes(searchQuery)
                     searchedRecipesResponse.value = handleFoodRecipesResponse(response)
                 } catch (e: java.lang.Exception) {
-                    searchedRecipesResponse.value = NetworkResult.Error(messageId = R.string.recipes_not_found)
+                    searchedRecipesResponse.value =
+                        NetworkResult.Error(messageId = R.string.recipes_not_found)
                 }
             } else {
-                searchedRecipesResponse.value = NetworkResult.Error(messageId = R.string.no_internet_connection)
+                searchedRecipesResponse.value =
+                    NetworkResult.Error(messageId = R.string.no_internet_connection)
             }
-        }
-    }
-
-    fun saveAndReplaceSelectedRecipe(selectedRecipeEntity: SelectedRecipeEntity) {
-        viewModelScope.launch {
-            repository.local.saveSelectedRecipe(selectedRecipeEntity)
         }
     }
 
