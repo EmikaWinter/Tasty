@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.tms.an16.tasty.database.entity.FavoritesEntity
-import com.tms.an16.tasty.database.entity.SelectedRecipeEntity
 import com.tms.an16.tasty.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -30,11 +29,4 @@ class FavoriteRecipesViewModel @Inject constructor(
             repository.local.deleteAllFavoriteRecipes()
         }
     }
-
-    fun saveAndReplaceSelectedRecipe(selectedRecipeEntity: SelectedRecipeEntity) {
-        viewModelScope.launch {
-            repository.local.saveSelectedRecipe(selectedRecipeEntity)
-        }
-    }
-
 }

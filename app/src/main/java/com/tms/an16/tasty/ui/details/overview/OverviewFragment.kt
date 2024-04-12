@@ -3,7 +3,6 @@ package com.tms.an16.tasty.ui.details.overview
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +15,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.snackbar.Snackbar
 import com.tms.an16.tasty.R
+import com.tms.an16.tasty.controller.SelectedRecipeController
 import com.tms.an16.tasty.database.entity.FavoritesEntity
 import com.tms.an16.tasty.database.entity.RecipeEntity
 import com.tms.an16.tasty.databinding.FragmentOverviewBinding
-import com.tms.an16.tasty.util.Constants.Companion.RECIPE_RESULT_KEY
 import com.tms.an16.tasty.util.parseHtml
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -47,49 +46,43 @@ class OverviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val args = arguments
+        val recipe = SelectedRecipeController.selectedRecipeEntity ?: return
 
-        val recipeId = args?.getInt(RECIPE_RESULT_KEY) ?: 0
-
-        viewModel.loadSelectedRecipeById(recipeId)
-
-        viewModel.selectedRecipe.observe(viewLifecycleOwner) { recipe ->
-            binding?.run {
-                mainImageView.run {
-                    Glide.with(requireContext())
-                        .load(recipe.image)
-                        .transition(DrawableTransitionOptions.withCrossFade(300))
-                        .error(R.drawable.ic_empty_image)
-                        .into(this)
-                }
-
-                titleTextView.text = recipe.title
-                likesTextView.text = recipe.aggregateLikes.toString()
-                timeTextView.text = recipe.readyInMinutes.toString()
-
-                parseHtml(this.summaryTextView, recipe.summary)
-
-                updateColors(recipe.vegetarian, this.vegetarianTextView)
-                updateColors(recipe.vegan, this.veganTextView)
-                updateColors(recipe.cheap, this.cheapTextView)
-                updateColors(recipe.dairyFree, this.dairyTextView)
-                updateColors(recipe.glutenFree, this.glutenFreeTextView)
-                updateColors(recipe.veryHealthy, this.healthyTextView)
+        binding?.run {
+            mainImageView.run {
+                Glide.with(requireContext())
+                    .load(recipe.image)
+                    .transition(DrawableTransitionOptions.withCrossFade(300))
+                    .error(R.drawable.ic_empty_image)
+                    .into(this)
             }
 
-            checkSavedRecipes(recipeId)
+            titleTextView.text = recipe.title
+            likesTextView.text = recipe.aggregateLikes.toString()
+            timeTextView.text = recipe.readyInMinutes.toString()
 
-            binding?.saveToFavImageView?.setOnClickListener {
-                if (!recipeSaved) {
-                    saveToFavorites(recipe)
-                } else {
-                    deleteFromFavorites(recipe)
-                }
+            parseHtml(this.summaryTextView, recipe.summary)
+
+            updateColors(recipe.vegetarian, this.vegetarianTextView)
+            updateColors(recipe.vegan, this.veganTextView)
+            updateColors(recipe.cheap, this.cheapTextView)
+            updateColors(recipe.dairyFree, this.dairyTextView)
+            updateColors(recipe.glutenFree, this.glutenFreeTextView)
+            updateColors(recipe.veryHealthy, this.healthyTextView)
+        }
+
+        checkIsFavoriteRecipe(recipe.recipeId)
+
+        binding?.saveToFavImageView?.setOnClickListener {
+            if (!recipeSaved) {
+                saveToFavorites(recipe)
+            } else {
+                deleteFromFavorites(recipe)
             }
         }
     }
 
-    private fun checkSavedRecipes(id: Int) {
+    private fun checkIsFavoriteRecipe(id: Int) {
         lifecycleScope.launch {
             viewModel.readFavoriteRecipes.collectLatest { favoritesEntity ->
                 try {
@@ -100,8 +93,7 @@ class OverviewFragment : Fragment() {
                             recipeSaved = true
                         }
                     }
-                } catch (e: Exception) {
-                    Log.d("OverviewFragment", e.message.toString())
+                } catch (_: Exception) {
                 }
             }
         }

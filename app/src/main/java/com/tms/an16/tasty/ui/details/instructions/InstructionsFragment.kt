@@ -9,9 +9,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import com.tms.an16.tasty.controller.SelectedRecipeController
 import com.tms.an16.tasty.databinding.FragmentInstructionsBinding
-import com.tms.an16.tasty.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,7 +18,6 @@ class InstructionsFragment : Fragment() {
 
     private var binding: FragmentInstructionsBinding? = null
 
-    private val viewModel: InstructionsViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,23 +30,17 @@ class InstructionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val args = arguments
+        val recipe = SelectedRecipeController.selectedRecipeEntity ?: return
 
-        val recipeId = args?.getInt(Constants.RECIPE_RESULT_KEY) ?: 0
-
-        viewModel.loadSelectedRecipeById(recipeId)
-
-        viewModel.selectedRecipe.observe(viewLifecycleOwner) { recipe ->
-            binding?.run {
-                instructionsWebView.webViewClient = object : WebViewClient() {
-                    override fun onPageCommitVisible(view: WebView?, url: String?) {
-                        super.onPageCommitVisible(view, url)
-                        progressBar.isVisible = false
-                    }
+        binding?.run {
+            instructionsWebView.webViewClient = object : WebViewClient() {
+                override fun onPageCommitVisible(view: WebView?, url: String?) {
+                    super.onPageCommitVisible(view, url)
+                    progressBar.isVisible = false
                 }
-                instructionsWebView.settings.javaScriptEnabled = true
-                instructionsWebView.loadUrl(recipe.sourceUrl)
             }
+            instructionsWebView.settings.javaScriptEnabled = true
+            instructionsWebView.loadUrl(recipe.sourceUrl)
         }
     }
 }

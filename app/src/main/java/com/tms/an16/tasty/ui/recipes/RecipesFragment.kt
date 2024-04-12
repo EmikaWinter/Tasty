@@ -20,11 +20,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.controller.NetworkState
+import com.tms.an16.tasty.controller.SelectedRecipeController
 import com.tms.an16.tasty.database.entity.RecipeEntity
 import com.tms.an16.tasty.databinding.FragmentRecipesBinding
 import com.tms.an16.tasty.network.NetworkResult
 import com.tms.an16.tasty.ui.recipes.adapter.RecipesAdapter
-import com.tms.an16.tasty.util.toSelectedRecipeEntity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -89,7 +89,11 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                         readDatabase()
 
                         hideNoInternetError()
-                        Toast.makeText(context, getString(R.string.we_are_back_online), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            getString(R.string.we_are_back_online),
+                            Toast.LENGTH_SHORT
+                        ).show()
                         viewModel.saveBackOnline(false)
                     }
                 }
@@ -97,11 +101,19 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                 NetworkState.DISCONNECTED -> {
                     loadDataFromCache()
 
-                    Toast.makeText(context, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        getString(R.string.no_internet_connection),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     viewModel.saveBackOnline(true)
 
                     binding?.choiceActionButton?.setOnClickListener {
-                        Toast.makeText(context, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            getString(R.string.no_internet_connection),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
@@ -202,8 +214,8 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     private fun loadDataFromCache() {
         viewModel.readRecipes.observe(viewLifecycleOwner) { database ->
             if (database.isNotEmpty()) {
-                setList(database)
                 hideNoInternetError()
+                setList(database)
             } else {
                 setNoInternetError()
             }
@@ -229,7 +241,9 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
         binding?.recyclerView?.run {
             if (adapter == null) {
                 adapter = RecipesAdapter { recipe ->
-                    viewModel.saveAndReplaceSelectedRecipe(recipe.toSelectedRecipeEntity())
+
+                    SelectedRecipeController.selectedRecipeEntity = recipe
+
                     findNavController().navigate(
                         RecipesFragmentDirections.actionRecipesFragmentToDetailsFragment(
                             recipe.recipeId

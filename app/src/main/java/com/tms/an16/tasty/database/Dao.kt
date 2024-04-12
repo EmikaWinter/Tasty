@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.tms.an16.tasty.database.entity.FavoritesEntity
 import com.tms.an16.tasty.database.entity.RecipeEntity
-import com.tms.an16.tasty.database.entity.SelectedRecipeEntity
 import com.tms.an16.tasty.database.entity.TriviaEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -23,12 +22,6 @@ interface Dao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrivia(triviaEntity: TriviaEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSelectedRecipe(selectedRecipeEntity: SelectedRecipeEntity)
-
-    @Query("SELECT * FROM selected_recipes_table WHERE recipeId == :id")
-    suspend fun getSelectedRecipeById(id: Int): SelectedRecipeEntity
-
     @Query("SELECT * FROM recipes_table ORDER BY title ASC")
     fun readRecipes(): Flow<List<RecipeEntity>>
 
@@ -40,9 +33,6 @@ interface Dao {
 
     @Delete
     suspend fun deleteFavoriteRecipe(favoritesEntity: FavoritesEntity)
-
-    @Query("DELETE FROM selected_recipes_table")
-    suspend fun deleteAllSelectedRecipes()
 
     @Query("DELETE FROM recipes_table")
     suspend fun deleteAllRecipes()

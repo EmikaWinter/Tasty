@@ -30,13 +30,4 @@ class NetworkReceiver : BroadcastReceiver() {
             }
         }
     }
-
-//        val connectivityManager =
-//            context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//        val networkInfo = connectivityManager.activeNetworkInfo
-//        if (networkInfo != null && networkInfo.isConnected) {
-//            // internet connection is available
-//        } else {
-//            // internet connection is not available
-//        }
 }
