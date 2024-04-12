@@ -99,7 +99,6 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
         val queries: HashMap<String, String> = HashMap()
 
         queries[Constants.QUERY_NUMBER] = Constants.DEFAULT_RECIPES_NUMBER
-        queries[Constants.QUERY_API_KEY] = Constants.API_KEY
         queries[Constants.QUERY_ADD_RECIPE_INFORMATION] = "true"
         queries[Constants.QUERY_FILL_INGREDIENTS] = "true"
 
@@ -112,7 +111,6 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
         val queries: HashMap<String, String> = HashMap()
         queries[Constants.QUERY_SEARCH] = searchQuery
         queries[Constants.QUERY_NUMBER] = Constants.DEFAULT_RECIPES_NUMBER
-        queries[Constants.QUERY_API_KEY] = Constants.API_KEY
         queries[Constants.QUERY_ADD_RECIPE_INFORMATION] = "true"
         queries[Constants.QUERY_FILL_INGREDIENTS] = "true"
         return queries
