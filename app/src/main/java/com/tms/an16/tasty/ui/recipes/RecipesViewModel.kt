@@ -90,7 +90,7 @@ class RecipesViewModel @Inject constructor(
                 try {
                     val response = repository.remote.searchRecipes(searchQuery)
                     searchedRecipesResponse.value = handleFoodRecipesResponse(response)
-                } catch (e: java.lang.Exception) {
+                } catch (e: Exception) {
                     searchedRecipesResponse.value =
                         NetworkResult.Error(messageId = R.string.recipes_not_found)
                 }

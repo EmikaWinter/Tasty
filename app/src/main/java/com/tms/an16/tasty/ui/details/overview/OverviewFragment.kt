@@ -19,6 +19,7 @@ import com.tms.an16.tasty.controller.SelectedRecipeController
 import com.tms.an16.tasty.database.entity.FavoritesEntity
 import com.tms.an16.tasty.database.entity.RecipeEntity
 import com.tms.an16.tasty.databinding.FragmentOverviewBinding
+import com.tms.an16.tasty.util.logError
 import com.tms.an16.tasty.util.parseHtml
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -93,7 +94,8 @@ class OverviewFragment : Fragment() {
                             recipeSaved = true
                         }
                     }
-                } catch (_: Exception) {
+                } catch (e: Exception) {
+                    logError("OverviewFragment", e.message.toString())
                 }
             }
         }

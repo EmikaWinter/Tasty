@@ -13,6 +13,10 @@ android {
     namespace = "com.tms.an16.tasty"
     compileSdk = 34
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.tms.an16.tasty"
         minSdk = 29
@@ -21,10 +25,17 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig = signingConfigs.getByName("debug")
     }
 
     buildTypes {
+        debug {
+            buildConfigField("boolean", "DEBUG", "true")
+            buildConfigField("String", "apiKey", "\"10cac3ab3a1841d8aa15d33c263fcc30\"")
+        }
         release {
+            buildConfigField("boolean", "DEBUG", "false")
+            buildConfigField("String", "apiKey", "\"30ce593bd5cb43899bfbc36c208ed9d0\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

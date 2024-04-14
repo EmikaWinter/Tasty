@@ -14,6 +14,7 @@ import com.tms.an16.tasty.databinding.RecipesBottomSheetBinding
 import com.tms.an16.tasty.ui.recipes.RecipesViewModel
 import com.tms.an16.tasty.util.Constants.Companion.DEFAULT_DIET_TYPE
 import com.tms.an16.tasty.util.Constants.Companion.DEFAULT_MEAL_TYPE
+import com.tms.an16.tasty.util.logError
 import java.util.Locale
 
 class RecipesBottomSheet : BottomSheetDialogFragment() {
@@ -92,7 +93,8 @@ class RecipesBottomSheet : BottomSheetDialogFragment() {
                 val targetView = chipGroup.findViewById<Chip>(chipId)
                 targetView.isChecked = true
                 chipGroup.requestChildFocus(targetView, targetView)
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                logError("RecipesBottomSheet", e.message.toString())
             }
         }
     }

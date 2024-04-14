@@ -1,7 +1,7 @@
 package com.tms.an16.tasty.di
 
+import com.tms.an16.tasty.BuildConfig
 import com.tms.an16.tasty.network.Api
-import com.tms.an16.tasty.util.Constants.Companion.API_KEY
 import com.tms.an16.tasty.util.Constants.Companion.BASE_URL
 import com.tms.an16.tasty.util.Constants.Companion.QUERY_API_KEY
 import dagger.Module
@@ -28,11 +28,15 @@ class NetworkModule {
             .client(
                 OkHttpClient.Builder()
                     .addInterceptor(HttpLoggingInterceptor().apply {
-                        level = HttpLoggingInterceptor.Level.BODY
+                        level = if (BuildConfig.DEBUG) {
+                            HttpLoggingInterceptor.Level.BODY
+                        } else {
+                            HttpLoggingInterceptor.Level.NONE
+                        }
                     })
                     .addInterceptor(Interceptor { chain ->
                         val request = chain.request()
-                        val url = request.url.newBuilder().addQueryParameter(QUERY_API_KEY, API_KEY)
+                        val url = request.url.newBuilder().addQueryParameter(QUERY_API_KEY, BuildConfig.apiKey)
                             .build()
                         val newRequest = request.newBuilder().url(url).build()
                         chain.proceed(newRequest)
