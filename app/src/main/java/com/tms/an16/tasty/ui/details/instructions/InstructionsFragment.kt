@@ -43,7 +43,6 @@ class InstructionsFragment : Fragment() {
             }
             instructionsWebView.settings.javaScriptEnabled = true
             instructionsWebView.loadUrl(recipe.sourceUrl)
-
         }
     }
 

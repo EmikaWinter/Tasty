@@ -25,6 +25,7 @@ import com.tms.an16.tasty.database.entity.RecipeEntity
 import com.tms.an16.tasty.databinding.FragmentRecipesBinding
 import com.tms.an16.tasty.network.NetworkResult
 import com.tms.an16.tasty.ui.recipes.adapter.RecipesAdapter
+import com.tms.an16.tasty.util.toRecipeEntity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -74,10 +75,11 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun isNetworkConnected() {
-        viewModel.isNetworkConnected.observe(viewLifecycleOwner) {
+        viewModel.isNetworkConnected.observe(viewLifecycleOwner) { networkStatus ->
+
             readDatabase()
 
-            when (it) {
+            when (networkStatus) {
                 NetworkState.UNKNOWN -> return@observe
 
                 NetworkState.CONNECTED -> {
@@ -87,7 +89,6 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
                     if (viewModel.backOnline) {
                         readDatabase()
-
                         hideNoInternetError()
                         Toast.makeText(
                             context,
@@ -100,7 +101,6 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
                 NetworkState.DISCONNECTED -> {
                     loadDataFromCache()
-
                     Toast.makeText(
                         context,
                         getString(R.string.no_internet_connection),
@@ -118,7 +118,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                 }
 
                 else -> {
-//                    do nothing
+                    //do nothing
                 }
             }
         }
@@ -134,9 +134,9 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private fun readDatabase() {
         viewModel.readRecipes.observe(viewLifecycleOwner) { database ->
-            if (database.isNotEmpty()
-                && !args.backFromBottomSheet
-                || database.isNotEmpty() && dataRequested
+            if ((database.isNotEmpty()
+                        && !args.backFromBottomSheet)
+                || (database.isNotEmpty() && dataRequested)
             ) {
                 setList(database)
                 hideShimmerEffect()
@@ -155,7 +155,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
             when (response) {
                 is NetworkResult.Success -> {
                     hideShimmerEffect()
-                    loadDataFromCache()
+                    response.data?.recipes?.let { recipeResponse -> setList(recipeResponse.map { it.toRecipeEntity() }) }
                     viewModel.saveMealAndDietType()
                 }
 
@@ -183,7 +183,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
             when (response) {
                 is NetworkResult.Success -> {
                     hideShimmerEffect()
-                    response.data?.recipes?.let { setList(it) }
+                    response.data?.recipes?.let { recipeResponse -> setList(recipeResponse.map { it.toRecipeEntity() }) }
                 }
 
                 is NetworkResult.Error -> {
@@ -216,7 +216,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
             if (database.isNotEmpty()) {
                 hideNoInternetError()
                 setList(database)
-            } else {
+            } else if (viewModel.isNetworkConnected.value == NetworkState.DISCONNECTED) {
                 setNoInternetError()
             }
         }
@@ -245,9 +245,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
                     SelectedRecipeController.selectedRecipeEntity = recipe
 
                     findNavController().navigate(
-                        RecipesFragmentDirections.actionRecipesFragmentToDetailsFragment(
-//                            recipe.recipeId
-                        )
+                        RecipesFragmentDirections.actionRecipesFragmentToDetailsFragment()
                     )
                 }
             }

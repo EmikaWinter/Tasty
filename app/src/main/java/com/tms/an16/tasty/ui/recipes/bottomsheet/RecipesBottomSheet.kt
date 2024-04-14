@@ -1,7 +1,6 @@
 package com.tms.an16.tasty.ui.recipes.bottomsheet
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -93,8 +92,7 @@ class RecipesBottomSheet : BottomSheetDialogFragment() {
                 val targetView = chipGroup.findViewById<Chip>(chipId)
                 targetView.isChecked = true
                 chipGroup.requestChildFocus(targetView, targetView)
-            } catch (e: Exception) {
-                Log.d("RecipesBottomSheet", e.message.toString())
+            } catch (_: Exception) {
             }
         }
     }

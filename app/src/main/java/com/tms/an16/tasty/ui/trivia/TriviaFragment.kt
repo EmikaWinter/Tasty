@@ -18,7 +18,6 @@ import androidx.lifecycle.lifecycleScope
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.databinding.FragmentTriviaBinding
 import com.tms.an16.tasty.network.NetworkResult
-import com.tms.an16.tasty.util.Constants.Companion.API_KEY
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -67,7 +66,7 @@ class TriviaFragment : Fragment() {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
-        viewModel.getTrivia(API_KEY)
+        viewModel.getTrivia()
 
         viewModel.triviaResponse.observe(viewLifecycleOwner) { response ->
             when (response) {

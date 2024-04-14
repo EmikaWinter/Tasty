@@ -1,10 +1,9 @@
 package com.tms.an16.tasty.network
 
-import com.tms.an16.tasty.model.Trivia
 import com.tms.an16.tasty.model.FoodRecipes
+import com.tms.an16.tasty.model.Trivia
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.Query
 import retrofit2.http.QueryMap
 
 interface Api {
@@ -21,6 +20,5 @@ interface Api {
 
     @GET("food/trivia/random")
     suspend fun getTrivia(
-        @Query("apiKey") apiKey: String
     ): Response<Trivia>
 }

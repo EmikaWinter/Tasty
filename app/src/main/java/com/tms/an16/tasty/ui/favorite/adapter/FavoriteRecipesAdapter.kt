@@ -23,7 +23,6 @@ class FavoriteRecipesAdapter(
         ): Boolean {
             return oldItem == newItem
         }
-
     }) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteRecipesViewHolder {
         return FavoriteRecipesViewHolder(

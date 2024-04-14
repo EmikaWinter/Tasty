@@ -18,6 +18,7 @@ import com.tms.an16.tasty.util.Constants.Companion.DEFAULT_DIET_TYPE
 import com.tms.an16.tasty.util.Constants.Companion.DEFAULT_MEAL_TYPE
 import com.tms.an16.tasty.util.Constants.Companion.QUERY_DIET
 import com.tms.an16.tasty.util.Constants.Companion.QUERY_TYPE
+import com.tms.an16.tasty.util.toRecipeEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -143,7 +144,6 @@ class RecipesViewModel @Inject constructor(
         return dataStoreRepository.applySearchQuery(searchQuery)
     }
 
-
     fun saveBackOnline(backOnline: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             dataStoreRepository.saveBackOnline(backOnline)
@@ -153,7 +153,7 @@ class RecipesViewModel @Inject constructor(
     private fun offlineCacheRecipes(foodRecipes: FoodRecipes) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.local.deleteAllRecipes()
-            repository.local.insertRecipes(foodRecipes.recipes)
+            repository.local.insertRecipes(foodRecipes.recipes.map { it.toRecipeEntity() })
         }
     }
 

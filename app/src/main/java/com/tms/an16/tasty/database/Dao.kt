@@ -22,7 +22,7 @@ interface Dao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrivia(triviaEntity: TriviaEntity)
 
-    @Query("SELECT * FROM recipes_table ORDER BY title ASC")
+    @Query("SELECT * FROM recipes_table ORDER BY orderId ASC")
     fun readRecipes(): Flow<List<RecipeEntity>>
 
     @Query("SELECT * FROM favorite_recipes_table ORDER BY saveTimestamp DESC")
