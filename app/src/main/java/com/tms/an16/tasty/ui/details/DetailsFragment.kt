@@ -69,7 +69,6 @@ class DetailsFragment : Fragment() {
                             this.type = "text/plain"
                         }
                         startActivity(shareIntent)
-
                     }
 
                     R.id.save_as_pdf_recipe -> {
@@ -109,5 +108,4 @@ class DetailsFragment : Fragment() {
             }.attach()
         }
     }
-
 }

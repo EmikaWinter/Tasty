@@ -8,7 +8,8 @@ import com.tms.an16.tasty.util.Constants.Companion.RECIPES_TABLE
 
 @Entity(tableName = RECIPES_TABLE)
 data class RecipeEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    var orderId: Int,
     @SerializedName("id")
     val recipeId: Int,
     val aggregateLikes: Int,

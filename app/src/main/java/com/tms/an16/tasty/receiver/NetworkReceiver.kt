@@ -18,11 +18,9 @@ class NetworkReceiver : BroadcastReceiver() {
     @Inject
     lateinit var networkController: NetworkController
 
-    private var scope: CoroutineScope? = null
     override fun onReceive(context: Context?, intent: Intent?) {
         val isNetworkConnected: Boolean = context?.isNetworkConnected() == true
-        scope = CoroutineScope(Dispatchers.Main)
-        scope?.launch {
+        CoroutineScope(Dispatchers.Main).launch {
             if (isNetworkConnected) {
                 networkController.isNetworkConnected.emit(NetworkState.CONNECTED)
             } else {

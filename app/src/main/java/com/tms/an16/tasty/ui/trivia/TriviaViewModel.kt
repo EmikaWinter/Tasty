@@ -38,12 +38,12 @@ class TriviaViewModel @Inject constructor(
         }
     }
 
-    fun getTrivia(apiKey: String) {
+    fun getTrivia() {
         viewModelScope.launch {
             triviaResponse.value = NetworkResult.Loading()
             if (isNetworkConnected.value == NetworkState.CONNECTED) {
                 try {
-                    val response = repository.remote.getTrivia(apiKey)
+                    val response = repository.remote.getTrivia()
                     triviaResponse.value = handleTriviaResponse(response)
 
                     val trivia = triviaResponse.value?.data

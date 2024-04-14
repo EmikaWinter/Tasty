@@ -43,10 +43,10 @@ class FavoriteRecipesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-            viewModel.readFavoriteRecipes.observe(viewLifecycleOwner) {
-                setList(it)
-                setNoDataError(it)
-            }
+        viewModel.readFavoriteRecipes.observe(viewLifecycleOwner) {
+            setList(it)
+            setNoDataError(it)
+        }
 
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
@@ -80,9 +80,7 @@ class FavoriteRecipesFragment : Fragment() {
                     SelectedRecipeController.selectedRecipeEntity = favorite.recipeEntity
 
                     findNavController().navigate(
-                        FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToDetailsFragment(
-//                            favorite.recipeEntity.recipeId
-                        )
+                        FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToDetailsFragment()
                     )
                 }, onLongClick = { favorite ->
                     MaterialAlertDialogBuilder(requireContext())
