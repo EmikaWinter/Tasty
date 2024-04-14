@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.tms.an16.tasty.R
 import com.tms.an16.tasty.controller.NetworkState
 import com.tms.an16.tasty.controller.SelectedRecipeController
@@ -40,6 +41,8 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     private val args by navArgs<RecipesFragmentArgs>()
 
     private var dataRequested = false
+
+    private var isRequestedFromSearchApi = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -182,6 +185,7 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
         viewModel.searchedRecipesResponse.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is NetworkResult.Success -> {
+                    isRequestedFromSearchApi = true
                     hideShimmerEffect()
                     response.data?.recipes?.let { recipeResponse -> setList(recipeResponse.map { it.toRecipeEntity() }) }
                 }
@@ -240,6 +244,10 @@ class RecipesFragment : Fragment(), SearchView.OnQueryTextListener {
     private fun setList(list: List<RecipeEntity>) {
         binding?.recyclerView?.run {
             if (adapter == null) {
+                if (isRequestedFromSearchApi) {
+                    layoutManager = LinearLayoutManager(requireContext())
+                    isRequestedFromSearchApi = false
+                }
                 adapter = RecipesAdapter { recipe ->
 
                     SelectedRecipeController.selectedRecipeEntity = recipe
