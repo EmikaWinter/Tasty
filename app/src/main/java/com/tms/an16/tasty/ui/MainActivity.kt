@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.tms.an16.tasty.R
@@ -40,6 +41,13 @@ class MainActivity : AppCompatActivity() {
 
         navController = findNavController(R.id.nav_host_fragment)
 
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.recipesFragment,
+                R.id.favoriteRecipesFragment,
+                R.id.triviaFragment
+            )
+        )
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.recipesFragment -> showBottomNav()
@@ -50,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding?.bottomNavigation?.setupWithNavController(navController)
-        setupActionBarWithNavController(navController)
+        setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
     private fun showBottomNav() {
