@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recipes">Рецепты</string>
+    <string name="favorite_recipes">Избранное</string>
+    <string name="meal_type">Тип питания</string>
+    <string name="main_course">Main Course</string>
+    <string name="drink">Drink</string>
+    <string name="snack">Snack</string>
+    <string name="finger_food">Finger Food</string>
+    <string name="marinade">Marinade</string>
+    <string name="sauce">Sauce</string>
+    <string name="beverage">Beverage</string>
+    <string name="soup">Soup</string>
+    <string name="breakfast">Breakfast</string>
+    <string name="bread">Bread</string>
+    <string name="salad">Salad</string>
+    <string name="appetizer">Appetizer</string>
+    <string name="dessert">Dessert</string>
+    <string name="side_dish">Side Dish</string>
+    <string name="diet_type">Тип диеты</string>
+    <string name="primal">Primal</string>
+    <string name="whole_30">Whole 30</string>
+    <string name="paleo">Paleo</string>
+    <string name="pescetarian">Pescetarian</string>
+    <string name="vegan">Vegan</string>
+    <string name="vegetarian">Vegetarian</string>
+    <string name="ketogenic">Ketogenic</string>
+    <string name="gluten_free">Gluten Free</string>
+    <string name="apply">Применить</string>
+    <string name="search">Поиск</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="dairy_free">Dairy free</string>
+    <string name="healthy">Healthy</string>
+    <string name="cheap">Cheap</string>
+    <string name="share">Поделиться</string>
+    <string name="save_as_pdf">Сохранить в PDF</string>
+    <string name="menu">Menu</string>
+    <string name="save_to_favorites">Сохранить в избранное</string>
+    <string name="no_favorite_recipes">Нет избранных рецептов</string>
+    <string name="delete">Удалить</string>
+    <string name="delete_all">Удалить все</string>
+
+    <string name="trivia">Факт</string>
+    <string name="interesting_fact">Любопытный факт!</string>
+    <string name="awesome_recipe_check_it_out">Вот потрясающий рецепт! Проверьте!</string>
+
+    <string name="details">Детали</string>
+    <string name="overview">Описание</string>
+    <string name="ingredients">Ингредиенты</string>
+    <string name="instructions">Инструкция</string>
+
+    <string name="recipes_not_found">Recipes not found</string>
+    <string name="no_internet_connection">Нет соединения с интернетом</string>
+    <string name="we_are_back_online">Подключение восстановлено</string>
+    <string name="timeout">Превышено время ожидания</string>
+    <string name="api_key_limited">Достигнут лимит количества запросов</string>
+    <string name="data_not_found">Данные не найдены</string>
+
+    <string name="delete_from_favorites">Удалить рецепт из избранного?</string>
+    <string name="this_action_cannot_be_undone">Это действие нельзя отменить</string>
+    <string name="recipe_saved">Рецепт сохранен</string>
+    <string name="removed_from_favorites">Удалено из избранного</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="deleted">Удалено</string>
+    <string name="all_recipes_removed">Все рецепты удалены</string>
+
+</resources>

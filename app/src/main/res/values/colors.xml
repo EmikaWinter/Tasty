@@ -1,5 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+
+    <color name="colorPrimary">#F76808</color>
+    <color name="colorPrimaryDark">#BD4B00</color>
+    <color name="colorSecondary">#FFA01C</color>
+    <color name="colorAccent">#FFCB47</color>
+
     <color name="white">#FFFFFFFF</color>
+    <color name="lightGrey">#F3F3F3</color>
+    <color name="lightMediumGrey">#DBDBDB</color>
+    <color name="mediumGrey">#8F8F8F</color>
+    <color name="darkGrey">#505050</color>
+    <color name="darkerGrey">#3E3E3E</color>
+    <color name="dark">#2E2E2E</color>
+    <color name="darker">#242525</color>
+    <color name="black">#FF000000</color>
+
+    <color name="red">#FF4646</color>
+    <color name="yellow">#FFC114</color>
+    <color name="green">#00C980</color>
+
+    <color name="backgroundColor">@color/lightGrey</color>
+    <color name="triviaBackgroundColor">@color/white</color>
+    <color name="placeholderColor">@color/mediumGrey</color>
+    <color name="itemColor">@color/darker</color>
+
+    // Custom Chip Style
+    <color name="checkedChipBackgroundColor">#20F76808</color>
+    <color name="chipBackgroundColor">@color/lightGrey</color>
+    <color name="checkedChipTextColor">@color/colorPrimary</color>
+    <color name="chipTextColor">@color/darkGrey</color>
+
+    // Custom CardView Style
+    <color name="strokeColor">@color/lightMediumGrey</color>
+    <color name="cardBackgroundColor">@color/white</color>
+    <color name="cardBackgroundLightColor">#10EA4200</color>
+    <color name="titleColor">@color/darker</color>
+    <color name="descriptionColor">@color/darkGrey</color>
+
+    <color name="statusBarColor">@color/colorPrimaryDark</color>
+    <color name="contextualStatusBarColor">@color/darker</color>
+    <color name="contextualActionBarColor">@color/darkerGrey</color>
+    <color name="actionBarBackgroundColor">@color/colorPrimary</color>
+
+    // Custom BottomNavigationView Style
+    <color name="bottomNavBackground">@color/white</color>
+    <color name="bottomNavItemColor">@color/darkGrey</color>
+    <color name="bottomNavCheckedItemColor">@color/colorPrimary</color>
+
 </resources>
